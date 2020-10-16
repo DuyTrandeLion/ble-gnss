@@ -27,22 +27,23 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "app_mems.h"
-#include "main.h"
 #include <stdio.h>
 
-#include "stm32f4xx_hal.h"
-#include "stm32f4xx_nucleo.h"
-#include "com.h"
-#include "demo_serial.h"
-#include "bsp_ip_conf.h"
-#include "fw_version.h"
 #include "motion_mc_manager.h"
 #include "motion_ec_manager.h"
+
+#include "iks01a2_mems_control.h"
+#include "iks01a2_mems_control_ex.h"
+
+#include "demo_serial.h"
+#include "com_bus.h"
+#include "nrf_delay.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define DWT_LAR_KEY  0xC5ACCE55 /* DWT register unlock key */
 #define ALGO_FREQ  50U /* Algorithm frequency >= 50Hz */
+#define ALGO_FREQ_MS  (20)
 #define ACC_ODR  ((float)ALGO_FREQ)
 #define ACC_FS  2 /* FS = <-2g, 2g> */
 #define MAG_ODR  ((float)ALGO_FREQ)
@@ -61,14 +62,12 @@ int OfflineDataCount = 0;
 uint32_t AlgoFreq = ALGO_FREQ;
 
 /* Extern variables ----------------------------------------------------------*/
+static const nrf_drv_timer_t m_mems_timer = NRF_DRV_TIMER_INSTANCE(MEMS_TIMER_INSTANCE);
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 static MOTION_SENSOR_Axes_t AccValue;
 static MOTION_SENSOR_Axes_t GyrValue;
 static MOTION_SENSOR_Axes_t MagValue;
-static float PressValue;
-static float TempValue;
-static float HumValue;
 static const uint32_t ReportInterval = 1000U / (float)ALGO_FREQ; /* Algorithm report interval [ms] between 10 and 50 ms */
 static volatile uint32_t TimeStamp = 0;
 static MOTION_SENSOR_Axes_t MagValueComp; /* Compensated magnetometer data [mGauss] */
@@ -79,86 +78,53 @@ static void MX_ECompass_Process(void);
 static void MC_Data_Handler(TMsg *Msg);
 static void EC_Data_Handler(TMsg *Msg);
 static void Init_Sensors(void);
-static void RTC_Handler(TMsg *Msg);
 static void Accelero_Sensor_Handler(TMsg *Msg);
 static void Gyro_Sensor_Handler(TMsg *Msg);
 static void Magneto_Sensor_Handler(TMsg *Msg);
-static void Pressure_Sensor_Handler(TMsg *Msg);
-static void Temperature_Sensor_Handler(TMsg *Msg);
-static void Humidity_Sensor_Handler(TMsg *Msg);
-static void TIM_Config(uint32_t Freq);
+static void TIM_Init();
 static void DWT_Init(void);
 static void DWT_Start(void);
 static uint32_t DWT_Stop(void);
 
-void MX_MEMS_Init(void)
-{
-  /* USER CODE BEGIN SV */
+uint8_t device_id;
 
-  /* USER CODE END SV */
-
-  /* USER CODE BEGIN MEMS_Init_PreTreatment */
-
-  /* USER CODE END MEMS_Init_PreTreatment */
-
-  /* Initialize the peripherals and the MEMS components */
-
-  MX_ECompass_Init();
-
-  /* USER CODE BEGIN MEMS_Init_PostTreatment */
-
-  /* USER CODE END MEMS_Init_PostTreatment */
-}
-
-/*
- * LM background task
- */
-void MX_MEMS_Process(void)
-{
-  /* USER CODE BEGIN MEMS_Process_PreTreatment */
-
-  /* USER CODE END MEMS_Process_PreTreatment */
-
-  MX_ECompass_Process();
-
-  /* USER CODE BEGIN MEMS_Process_PostTreatment */
-
-  /* USER CODE END MEMS_Process_PostTreatment */
-}
-
-/* Exported functions --------------------------------------------------------*/
 /**
- * @brief  Period elapsed callback
- * @param  htim pointer to a TIM_HandleTypeDef structure that contains
- *              the configuration information for TIM module.
+ * @brief  Build an array from the float
+ * @param  Dest destination
+ * @param  Data source
  * @retval None
  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+static void FloatToArray(uint8_t *Dest, float Data)
 {
-  if (htim->Instance == BSP_IP_TIM_Handle.Instance)
+  (void)memcpy(Dest, (void *)&Data, 4);
+}
+
+/**
+ * @brief  Build an array from the uint32_t (LSB first)
+ * @param  Dest destination
+ * @param  Source source
+ * @param  Len number of bytes
+ * @retval None
+ */
+static void Serialize_s32(uint8_t *Dest, int32_t Source, uint32_t Len)
+{
+  uint32_t i;
+  uint32_t source_uint32;
+
+  for (i = 0; i < Len; i++)
   {
-    SensorReadRequest = 1;
+    source_uint32 = (uint32_t)Source;
+    Dest[i] = (uint8_t)(source_uint32 & 0xFFU);
+    source_uint32 >>= 8;
+    Source = (int32_t)source_uint32;
   }
 }
 
-/* Private functions ---------------------------------------------------------*/
-/**
-  * @brief  Initialize the application
-  * @retval None
-  */
-static void MX_ECompass_Init(void)
+void MX_MEMS_Init(void)
 {
-  /* Initialize LED */
-  BSP_LED_Init(LED2);
-
-  /* Initialize Virtual COM Port */
-  BSP_COM_Init(COM1);
-
-  /* Initialize Timer */
-  BSP_IP_TIM_Init();
-
+  /* Initialize ECompass. */
   /* Configure Timer to run with desired algorithm frequency */
-  TIM_Config(ALGO_FREQ);
+  TIM_Init();
 
   /* Initialize (disabled) sensors */
   Init_Sensors();
@@ -174,77 +140,78 @@ static void MX_ECompass_Init(void)
   MotionEC_manager_get_version(LibVersion, &LibVersionLen);
 
   DWT_Init();
-
-  BSP_LED_On(LED2);
-  HAL_Delay(500);
-  BSP_LED_Off(LED2);
-
-  /* Start receiving messages via DMA */
-  UART_StartReceiveMsg();
 }
 
-/**
-  * @brief  Process of the application
-  * @retval None
-  */
-static void MX_ECompass_Process(void)
+/*
+ * LM background task
+ */
+void MX_MEMS_Process(void)
 {
-  static TMsg msg_dat;
-  static TMsg msg_cmd;
+    /* Process ECompass. */
+    static TMsg msg_dat;
+    static TMsg msg_cmd;
 
-  if (UART_ReceivedMSG((TMsg *)&msg_cmd) == 1)
-  {
-    if (msg_cmd.Data[0] == DEV_ADDR)
+    if (SensorReadRequest == 1U)
     {
-      (void)HandleMSG((TMsg *)&msg_cmd);
+        SensorReadRequest = 0;
+
+        /* Acquire data from enabled sensors and fill Msg stream */
+        Accelero_Sensor_Handler(&msg_dat);
+        Gyro_Sensor_Handler(&msg_dat);
+        Magneto_Sensor_Handler(&msg_dat);
+
+        /* Magnetometer Calibration specific part */
+        MC_Data_Handler(&msg_dat);
+
+        /* E-Compass specific part */
+        EC_Data_Handler(&msg_dat);
+
+        if (UseOfflineData == 1U)
+        {
+            OfflineDataCount--;
+            if (OfflineDataCount < 0)
+            {
+                OfflineDataCount = 0;
+            }
+
+            OfflineDataReadIndex++;
+            if (OfflineDataReadIndex >= OFFLINE_DATA_SIZE)
+            {
+                OfflineDataReadIndex = 0;
+            }
+
+            if (OfflineDataCount > 0)
+            {
+                SensorReadRequest = 1;
+            }
+        }
     }
-  }
-
-  if (SensorReadRequest == 1U)
-  {
-    SensorReadRequest = 0;
-
-    /* Acquire data from enabled sensors and fill Msg stream */
-    RTC_Handler(&msg_dat);
-    Accelero_Sensor_Handler(&msg_dat);
-    Gyro_Sensor_Handler(&msg_dat);
-    Magneto_Sensor_Handler(&msg_dat);
-    Humidity_Sensor_Handler(&msg_dat);
-    Temperature_Sensor_Handler(&msg_dat);
-    Pressure_Sensor_Handler(&msg_dat);
-
-    /* Magnetometer Calibration specific part */
-    MC_Data_Handler(&msg_dat);
-
-    /* E-Compass specific part */
-    EC_Data_Handler(&msg_dat);
-
-    /* Send data stream */
-    INIT_STREAMING_HEADER(&msg_dat);
-    msg_dat.Len = STREAMING_MSG_LENGTH;
-
-    if (UseOfflineData == 1U)
-    {
-      OfflineDataCount--;
-      if (OfflineDataCount < 0)
-      {
-        OfflineDataCount = 0;
-      }
-
-      OfflineDataReadIndex++;
-      if (OfflineDataReadIndex >= OFFLINE_DATA_SIZE)
-      {
-        OfflineDataReadIndex = 0;
-      }
-
-      if (OfflineDataCount > 0)
-      {
-        SensorReadRequest = 1;
-      }
-    }
-    UART_SendMsg(&msg_dat);
-  }
 }
+
+/* Exported functions --------------------------------------------------------*/
+/**
+ * @brief  Period elapsed callback
+ * @param  htim pointer to a TIM_HandleTypeDef structure that contains
+ *              the configuration information for TIM module.
+ * @retval None
+ */
+void timer_mems_event_handler(nrf_timer_event_t event_type, void* p_context)
+{
+    switch (event_type)
+    {
+        case NRF_TIMER_EVENT_COMPARE0:
+        {
+            SensorReadRequest = 1;
+            break;
+        }
+
+        default:
+            //Do nothing.
+            break;
+    }
+}
+
+/* Private functions ---------------------------------------------------------*/
 
 /**
  * @brief  Initialize all sensors
@@ -254,47 +221,16 @@ static void MX_ECompass_Process(void)
 static void Init_Sensors(void)
 {
   BSP_SENSOR_ACC_Init();
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
   BSP_SENSOR_GYR_Init();
+#endif
   BSP_SENSOR_MAG_Init();
-  BSP_SENSOR_PRESS_Init();
-  BSP_SENSOR_TEMP_Init();
-  BSP_SENSOR_HUM_Init();
 
   BSP_SENSOR_ACC_SetOutputDataRate(ACC_ODR);
   BSP_SENSOR_ACC_SetFullScale(ACC_FS);
   BSP_SENSOR_MAG_SetOutputDataRate(MAG_ODR);
 }
 
-/**
- * @brief  Handles the time+date getting/sending
- * @param  Msg the time+date part of the stream
- * @retval None
- */
-static void RTC_Handler(TMsg *Msg)
-{
-  uint8_t sub_sec = 0;
-  RTC_DateTypeDef sdatestructureget;
-  RTC_TimeTypeDef stimestructure;
-  uint32_t ans_uint32;
-  int32_t ans_int32;
-  uint32_t RtcSynchPrediv = hrtc.Init.SynchPrediv;
-
-  (void)HAL_RTC_GetTime(&hrtc, &stimestructure, FORMAT_BIN);
-  (void)HAL_RTC_GetDate(&hrtc, &sdatestructureget, FORMAT_BIN);
-
-  /* To be MISRA C-2012 compliant the original calculation:
-     sub_sec = ((((((int)RtcSynchPrediv) - ((int)stimestructure.SubSeconds)) * 100) / (RtcSynchPrediv + 1)) & 0xFF);
-     has been split to separate expressions */
-  ans_int32 = (RtcSynchPrediv - (int32_t)stimestructure.SubSeconds) * 100;
-  ans_int32 /= RtcSynchPrediv + 1;
-  ans_uint32 = (uint32_t)ans_int32 & 0xFFU;
-  sub_sec = (uint8_t)ans_uint32;
-
-  Msg->Data[3] = (uint8_t)stimestructure.Hours;
-  Msg->Data[4] = (uint8_t)stimestructure.Minutes;
-  Msg->Data[5] = (uint8_t)stimestructure.Seconds;
-  Msg->Data[6] = sub_sec;
-}
 
 /**
  * @brief  Magnetometer Calibration data handler
@@ -376,11 +312,9 @@ static void EC_Data_Handler(TMsg *Msg)
   data_in.deltatime_s = (float)ReportInterval / 1000.0f;
 
   /* Run E-Compass algorithm */
-  BSP_LED_On(LED2);
   DWT_Start();
   MotionEC_manager_run(&data_in, &data_out);
   elapsed_time_us = DWT_Stop();
-  BSP_LED_Off(LED2);
 
   /* Write data to output stream */
   FloatToArray(&Msg->Data[55], data_out.quaternion[0]);
@@ -458,7 +392,9 @@ static void Gyro_Sensor_Handler(TMsg *Msg)
     }
     else
     {
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
       BSP_SENSOR_GYR_GetAxes(&GyrValue);
+#endif
     }
 
     Serialize_s32(&Msg->Data[31], GyrValue.x, 4);
@@ -493,92 +429,27 @@ static void Magneto_Sensor_Handler(TMsg *Msg)
   }
 }
 
-/**
- * @brief  Handles the PRESS sensor data getting/sending.
- * @param  Msg the PRESS part of the stream
- * @retval None
- */
-static void Pressure_Sensor_Handler(TMsg *Msg)
-{
-  if ((SensorsEnabled & PRESSURE_SENSOR) == PRESSURE_SENSOR)
-  {
-    if (UseOfflineData == 1)
-    {
-      PressValue = OfflineData[OfflineDataReadIndex].pressure;
-    }
-    else
-    {
-      BSP_SENSOR_PRESS_GetValue(&PressValue);
-    }
-
-    (void)memcpy(&Msg->Data[7], (void *)&PressValue, sizeof(float));
-  }
-}
-
-/**
- * @brief  Handles the TEMP axes data getting/sending
- * @param  Msg the TEMP part of the stream
- * @retval None
- */
-static void Temperature_Sensor_Handler(TMsg *Msg)
-{
-  if ((SensorsEnabled & TEMPERATURE_SENSOR) == TEMPERATURE_SENSOR)
-  {
-    if (UseOfflineData == 1)
-    {
-      TempValue = OfflineData[OfflineDataReadIndex].temperature;
-    }
-    else
-    {
-      BSP_SENSOR_TEMP_GetValue(&TempValue);
-    }
-
-    (void)memcpy(&Msg->Data[11], (void *)&TempValue, sizeof(float));
-  }
-}
-
-/**
- * @brief  Handles the HUM axes data getting/sending
- * @param  Msg the HUM part of the stream
- * @retval None
- */
-static void Humidity_Sensor_Handler(TMsg *Msg)
-{
-  if ((SensorsEnabled & HUMIDITY_SENSOR) == HUMIDITY_SENSOR)
-  {
-    if (UseOfflineData == 1)
-    {
-      HumValue = OfflineData[OfflineDataReadIndex].humidity;
-    }
-    else
-    {
-      BSP_SENSOR_HUM_GetValue(&HumValue);
-    }
-
-    (void)memcpy(&Msg->Data[15], (void *)&HumValue, sizeof(float));;
-  }
-}
 
 /**
  * @brief  Timer configuration
  * @param  Freq the desired Timer frequency
  * @retval None
  */
-static void TIM_Config(uint32_t Freq)
+static void TIM_Init(void)
 {
-  const uint32_t tim_counter_clock = 2000; /* TIM counter clock 2 kHz */
-  uint32_t prescaler_value = (uint32_t)((SystemCoreClock / tim_counter_clock) - 1);
-  uint32_t period = (tim_counter_clock / Freq) - 1;
+    ret_code_t err_code;
+    
+    nrf_drv_timer_config_t timer_cfg = NRF_DRV_TIMER_DEFAULT_CONFIG;
 
-  BSP_IP_TIM_Handle.Init.Prescaler = prescaler_value;
-  BSP_IP_TIM_Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
-  BSP_IP_TIM_Handle.Init.Period = period;
-  BSP_IP_TIM_Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  BSP_IP_TIM_Handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&BSP_IP_TIM_Handle) != HAL_OK)
-  {
-    Error_Handler();
-  }
+    err_code = nrf_drv_timer_init(&m_mems_timer, &timer_cfg, timer_mems_event_handler);
+    APP_ERROR_CHECK(err_code);
+
+    nrf_drv_timer_extended_compare(&m_mems_timer,
+                                   NRF_TIMER_CC_CHANNEL0,
+                                   nrf_drv_timer_ms_to_ticks(&m_mems_timer, ALGO_FREQ_MS),
+                                   NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK,
+                                   true);
+    nrf_drv_timer_enable(&m_mems_timer);
 }
 
 /**

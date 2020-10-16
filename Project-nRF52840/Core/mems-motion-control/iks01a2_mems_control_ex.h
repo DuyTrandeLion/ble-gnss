@@ -27,31 +27,31 @@ extern "C" {
 
 #include "iks01a2_motion_sensors.h"
 #include "iks01a2_motion_sensors_ex.h"
-#include "iks01a2_env_sensors.h"
-#include "iks01a2_env_sensors_ex.h"
 
 void BSP_SENSOR_ACC_GetOrientation(char *Orientation);
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 void BSP_SENSOR_GYR_GetOrientation(char *Orientation);
+#endif
 void BSP_SENSOR_MAG_GetOrientation(char *Orientation);
 
 void BSP_SENSOR_ACC_Read_Register(uint8_t Reg, uint8_t *Data);
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 void BSP_SENSOR_GYR_Read_Register(uint8_t Reg, uint8_t *Data);
+#endif
 void BSP_SENSOR_MAG_Read_Register(uint8_t Reg, uint8_t *Data);
-void BSP_SENSOR_PRESS_Read_Register(uint8_t Reg, uint8_t *Data);
-void BSP_SENSOR_TEMP_Read_Register(uint8_t Reg, uint8_t *Data);
-void BSP_SENSOR_HUM_Read_Register(uint8_t Reg, uint8_t *Data);
 
 void BSP_SENSOR_ACC_Write_Register(uint8_t Reg, uint8_t Data);
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 void BSP_SENSOR_GYR_Write_Register(uint8_t Reg, uint8_t Data);
+#endif
 void BSP_SENSOR_MAG_Write_Register(uint8_t Reg, uint8_t Data);
-void BSP_SENSOR_PRESS_Write_Register(uint8_t Reg, uint8_t Data);
-void BSP_SENSOR_TEMP_Write_Register(uint8_t Reg, uint8_t Data);
-void BSP_SENSOR_HUM_Write_Register(uint8_t Reg, uint8_t Data);
 
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 void BSP_SENSOR_ACC_SetDRDYMode(uint8_t Mode);
 void BSP_SENSOR_GYR_SetDRDYMode(uint8_t Mode);
 void BSP_SENSOR_ACC_SetDRDYInt(uint8_t Enable);
 void BSP_SENSOR_GYR_SetDRDYInt(uint8_t Enable);
+#endif
 void BSP_SENSOR_ACC_GetDRDYStatus(uint8_t *Status);
 
 void BSP_ACC_GYR_Read_FSM_Data(uint8_t *Data);

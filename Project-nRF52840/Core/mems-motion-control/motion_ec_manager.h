@@ -29,7 +29,6 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
 #include "motion_ec.h"
-#include "main.h"
 #include "iks01a2_mems_control.h"
 
 /* Extern variables ----------------------------------------------------------*/

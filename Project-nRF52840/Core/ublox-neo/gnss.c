@@ -91,8 +91,8 @@ void gnss_init()
                                    NRF_TIMER_SHORT_COMPARE1_CLEAR_MASK,
                                    true);
     nrf_drv_twi_enable(&m_gnss_twi);
-    nrfx_timer_enable(&GNSS_TIMER);
-    nrfx_timer_enable(&UBX_TIMER);
+    nrf_drv_timer_enable(&GNSS_TIMER);
+    nrf_drv_timer_enable(&UBX_TIMER);
 
     GNSS_DEV.interface = (UBXGNSS_UART_INTERFACE | UBXGNSS_I2C_INTERFACE);
     GNSS_DEV.timeout   = 1000;

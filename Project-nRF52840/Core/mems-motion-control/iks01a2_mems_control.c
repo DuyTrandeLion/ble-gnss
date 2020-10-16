@@ -26,9 +26,14 @@
   */
 void BSP_SENSOR_ACC_Init(void)
 {
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
   (void)IKS01A2_MOTION_SENSOR_Init(IKS01A2_LSM6DSL_0, MOTION_ACCELERO);
+#elif (USE_IKS01A2_MOTION_SENSOR_LSM303AGR_ACC_0 == 1)
+  (void)IKS01A2_MOTION_SENSOR_Init(IKS01A2_LSM303AGR_ACC_0, MOTION_ACCELERO);
+#endif
 }
 
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 /**
   * @brief  Initializes gyroscope
   * @param  None
@@ -38,6 +43,7 @@ void BSP_SENSOR_GYR_Init(void)
 {
   (void)IKS01A2_MOTION_SENSOR_Init(IKS01A2_LSM6DSL_0, MOTION_GYRO);
 }
+#endif
 
 /**
   * @brief  Initializes magnetometer
@@ -50,45 +56,20 @@ void BSP_SENSOR_MAG_Init(void)
 }
 
 /**
-  * @brief  Initializes pressure sensor
-  * @param  None
-  * @retval None
-  */
-void BSP_SENSOR_PRESS_Init(void)
-{
-  (void)IKS01A2_ENV_SENSOR_Init(IKS01A2_LPS22HB_0, ENV_PRESSURE);
-}
-
-/**
-  * @brief  Initializes temperature sensor
-  * @param  None
-  * @retval None
-  */
-void BSP_SENSOR_TEMP_Init(void)
-{
-  (void)IKS01A2_ENV_SENSOR_Init(IKS01A2_HTS221_0, ENV_TEMPERATURE);
-}
-
-/**
-  * @brief  Initializes humidity sensor
-  * @param  None
-  * @retval None
-  */
-void BSP_SENSOR_HUM_Init(void)
-{
-  (void)IKS01A2_ENV_SENSOR_Init(IKS01A2_HTS221_0, ENV_HUMIDITY);
-}
-
-/**
   * @brief  Enables accelerometer
   * @param  None
   * @retval None
   */
 void BSP_SENSOR_ACC_Enable(void)
 {
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
   (void)IKS01A2_MOTION_SENSOR_Enable(IKS01A2_LSM6DSL_0, MOTION_ACCELERO);
+#elif (USE_IKS01A2_MOTION_SENSOR_LSM303AGR_ACC_0 == 1)
+  (void)IKS01A2_MOTION_SENSOR_Enable(IKS01A2_LSM303AGR_ACC_0, MOTION_ACCELERO);
+#endif
 }
 
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 /**
   * @brief  Enables gyroscope
   * @param  None
@@ -98,6 +79,7 @@ void BSP_SENSOR_GYR_Enable(void)
 {
   (void)IKS01A2_MOTION_SENSOR_Enable(IKS01A2_LSM6DSL_0, MOTION_GYRO);
 }
+#endif
 
 /**
   * @brief  Enables magnetometer
@@ -110,45 +92,20 @@ void BSP_SENSOR_MAG_Enable(void)
 }
 
 /**
-  * @brief  Enables pressure sensor
-  * @param  None
-  * @retval None
-  */
-void BSP_SENSOR_PRESS_Enable(void)
-{
-  (void)IKS01A2_ENV_SENSOR_Enable(IKS01A2_LPS22HB_0, ENV_PRESSURE);
-}
-
-/**
-  * @brief  Enables temperature sensor
-  * @param  None
-  * @retval None
-  */
-void BSP_SENSOR_TEMP_Enable(void)
-{
-  (void)IKS01A2_ENV_SENSOR_Enable(IKS01A2_HTS221_0, ENV_TEMPERATURE);
-}
-
-/**
-  * @brief  Enables humidity sensors
-  * @param  None
-  * @retval None
-  */
-void BSP_SENSOR_HUM_Enable(void)
-{
-  (void)IKS01A2_ENV_SENSOR_Enable(IKS01A2_HTS221_0, ENV_HUMIDITY);
-}
-
-/**
   * @brief  Disables accelerometer
   * @param  None
   * @retval None
   */
 void BSP_SENSOR_ACC_Disable(void)
 {
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
   (void)IKS01A2_MOTION_SENSOR_Disable(IKS01A2_LSM6DSL_0, MOTION_ACCELERO);
+#elif (USE_IKS01A2_MOTION_SENSOR_LSM303AGR_ACC_0 == 1)
+  (void)IKS01A2_MOTION_SENSOR_Disable(IKS01A2_LSM303AGR_ACC_0, MOTION_ACCELERO);
+#endif
 }
 
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 /**
   * @brief  Disables gyroscope
   * @param  None
@@ -158,6 +115,7 @@ void BSP_SENSOR_GYR_Disable(void)
 {
   (void)IKS01A2_MOTION_SENSOR_Disable(IKS01A2_LSM6DSL_0, MOTION_GYRO);
 }
+#endif
 
 /**
   * @brief  Disables magnetometer
@@ -170,45 +128,20 @@ void BSP_SENSOR_MAG_Disable(void)
 }
 
 /**
-  * @brief  Disables pressure sensor
-  * @param  None
-  * @retval None
-  */
-void BSP_SENSOR_PRESS_Disable(void)
-{
-  (void)IKS01A2_ENV_SENSOR_Disable(IKS01A2_LPS22HB_0, ENV_PRESSURE);
-}
-
-/**
-  * @brief  Disables temperature sensor
-  * @param  None
-  * @retval None
-  */
-void BSP_SENSOR_TEMP_Disable(void)
-{
-  (void)IKS01A2_ENV_SENSOR_Disable(IKS01A2_HTS221_0, ENV_TEMPERATURE);
-}
-
-/**
-  * @brief  Disables humidity sensor
-  * @param  None
-  * @retval None
-  */
-void BSP_SENSOR_HUM_Disable(void)
-{
-  (void)IKS01A2_ENV_SENSOR_Disable(IKS01A2_HTS221_0, ENV_HUMIDITY);
-}
-
-/**
   * @brief  Get accelerometer data
   * @param  Axes pointer to axes data structure
   * @retval None
   */
 void BSP_SENSOR_ACC_GetAxes(IKS01A2_MOTION_SENSOR_Axes_t *Axes)
 {
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
   (void)IKS01A2_MOTION_SENSOR_GetAxes(IKS01A2_LSM6DSL_0, MOTION_ACCELERO, Axes);
+#elif (USE_IKS01A2_MOTION_SENSOR_LSM303AGR_ACC_0 == 1)
+  (void)IKS01A2_MOTION_SENSOR_GetAxes(IKS01A2_LSM303AGR_ACC_0, MOTION_ACCELERO, Axes);
+#endif
 }
 
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 /**
   * @brief  Get gyroscope data
   * @param  Axes pointer to axes data structure
@@ -218,6 +151,7 @@ void BSP_SENSOR_GYR_GetAxes(IKS01A2_MOTION_SENSOR_Axes_t *Axes)
 {
   (void)IKS01A2_MOTION_SENSOR_GetAxes(IKS01A2_LSM6DSL_0, MOTION_GYRO, Axes);
 }
+#endif
 
 /**
   * @brief  Get magnetometer data
@@ -230,45 +164,20 @@ void BSP_SENSOR_MAG_GetAxes(IKS01A2_MOTION_SENSOR_Axes_t *Axes)
 }
 
 /**
-  * @brief  Get pressure sensor data
-  * @param  Value pointer to pressure value
-  * @retval None
-  */
-void BSP_SENSOR_PRESS_GetValue(float *Value)
-{
-  (void)IKS01A2_ENV_SENSOR_GetValue(IKS01A2_LPS22HB_0, ENV_PRESSURE, Value);
-}
-
-/**
-  * @brief  Get temperature sensor data
-  * @param  Value pointer to temperature value
-  * @retval None
-  */
-void BSP_SENSOR_TEMP_GetValue(float *Value)
-{
-  (void)IKS01A2_ENV_SENSOR_GetValue(IKS01A2_HTS221_0, ENV_TEMPERATURE, Value);
-}
-
-/**
-  * @brief  Get humidity sensor data
-  * @param  Value pointer to humidity value
-  * @retval None
-  */
-void BSP_SENSOR_HUM_GetValue(float *Value)
-{
-  (void)IKS01A2_ENV_SENSOR_GetValue(IKS01A2_HTS221_0, ENV_HUMIDITY, Value);
-}
-
-/**
   * @brief  Set output data rate for accelerometer
   * @param  Odr Output Data Rate value to be set
   * @retval None
   */
 void BSP_SENSOR_ACC_SetOutputDataRate(float Odr)
 {
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
   (void)IKS01A2_MOTION_SENSOR_SetOutputDataRate(IKS01A2_LSM6DSL_0, MOTION_ACCELERO, Odr);
+#elif (USE_IKS01A2_MOTION_SENSOR_LSM303AGR_ACC_0 == 1)
+  (void)IKS01A2_MOTION_SENSOR_SetOutputDataRate(IKS01A2_LSM303AGR_ACC_0, MOTION_ACCELERO, Odr);
+#endif
 }
 
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 /**
   * @brief  Set output data rate for gyroscope
   * @param  Odr Output Data Rate value to be set
@@ -278,6 +187,7 @@ void BSP_SENSOR_GYR_SetOutputDataRate(float Odr)
 {
   (void)IKS01A2_MOTION_SENSOR_SetOutputDataRate(IKS01A2_LSM6DSL_0, MOTION_GYRO, Odr);
 }
+#endif
 
 /**
   * @brief  Set output data rate for magnetometer
@@ -290,45 +200,20 @@ void BSP_SENSOR_MAG_SetOutputDataRate(float Odr)
 }
 
 /**
-  * @brief  Set output data rate for pressure sensor
-  * @param  Odr Output Data Rate value to be set
-  * @retval None
-  */
-void BSP_SENSOR_PRESS_SetOutputDataRate(float Odr)
-{
-  (void)IKS01A2_ENV_SENSOR_SetOutputDataRate(IKS01A2_LPS22HB_0, ENV_PRESSURE, Odr);
-}
-
-/**
-  * @brief  Set output data rate for temperature sensors
-  * @param  Odr Output Data Rate value to be set
-  * @retval None
-  */
-void BSP_SENSOR_TEMP_SetOutputDataRate(float Odr)
-{
-  (void)IKS01A2_ENV_SENSOR_SetOutputDataRate(IKS01A2_HTS221_0, ENV_TEMPERATURE, Odr);
-}
-
-/**
-  * @brief  Set output data rate for humidity sensor
-  * @param  Odr Output Data Rate value to be set
-  * @retval None
-  */
-void BSP_SENSOR_HUM_SetOutputDataRate(float Odr)
-{
-  (void)IKS01A2_ENV_SENSOR_SetOutputDataRate(IKS01A2_HTS221_0, ENV_HUMIDITY, Odr);
-}
-
-/**
   * @brief  Get output data rate for accelerometer
   * @param  Odr Output Data Rate value
   * @retval None
   */
 void BSP_SENSOR_ACC_GetOutputDataRate(float *Odr)
 {
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
   (void)IKS01A2_MOTION_SENSOR_GetOutputDataRate(IKS01A2_LSM6DSL_0, MOTION_ACCELERO, Odr);
+#elif (USE_IKS01A2_MOTION_SENSOR_LSM303AGR_ACC_0 == 1)
+  (void)IKS01A2_MOTION_SENSOR_GetOutputDataRate(IKS01A2_LSM303AGR_ACC_0, MOTION_ACCELERO, Odr);
+#endif
 }
 
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 /**
   * @brief  Get output data rate for gyroscope
   * @param  Odr Output Data Rate value
@@ -338,6 +223,7 @@ void BSP_SENSOR_GYR_GetOutputDataRate(float *Odr)
 {
   (void)IKS01A2_MOTION_SENSOR_GetOutputDataRate(IKS01A2_LSM6DSL_0, MOTION_GYRO, Odr);
 }
+#endif
 
 /**
   * @brief  Get output data rate for magnetometer
@@ -350,45 +236,20 @@ void BSP_SENSOR_MAG_GetOutputDataRate(float *Odr)
 }
 
 /**
-  * @brief  Get output data rate for pressure sensor
-  * @param  Odr Output Data Rate value
-  * @retval None
-  */
-void BSP_SENSOR_PRESS_GetOutputDataRate(float *Odr)
-{
-  (void)IKS01A2_ENV_SENSOR_GetOutputDataRate(IKS01A2_LPS22HB_0, ENV_PRESSURE, Odr);
-}
-
-/**
-  * @brief  Get output data rate for temperature sensors
-  * @param  Odr Output Data Rate value
-  * @retval None
-  */
-void BSP_SENSOR_TEMP_GetOutputDataRate(float *Odr)
-{
-  (void)IKS01A2_ENV_SENSOR_GetOutputDataRate(IKS01A2_HTS221_0, ENV_TEMPERATURE, Odr);
-}
-
-/**
-  * @brief  Get output data rate for humidity sensor
-  * @param  Odr Output Data Rate value
-  * @retval None
-  */
-void BSP_SENSOR_HUM_GetOutputDataRate(float *Odr)
-{
-  (void)IKS01A2_ENV_SENSOR_GetOutputDataRate(IKS01A2_HTS221_0, ENV_HUMIDITY, Odr);
-}
-
-/**
   * @brief  Set full scale for acclerometer
   * @param  Fullscale Fullscale value to be set
   * @retval None
   */
 void BSP_SENSOR_ACC_SetFullScale(int32_t Fullscale)
 {
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
   (void)IKS01A2_MOTION_SENSOR_SetFullScale(IKS01A2_LSM6DSL_0, MOTION_ACCELERO, Fullscale);
+#elif (USE_IKS01A2_MOTION_SENSOR_LSM303AGR_ACC_0 == 1)
+  (void)IKS01A2_MOTION_SENSOR_SetFullScale(IKS01A2_LSM303AGR_ACC_0, MOTION_ACCELERO, Fullscale);
+#endif
 }
 
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 /**
   * @brief  Set full scale for gyroscope
   * @param  Fullscale Fullscale value to be set
@@ -398,6 +259,7 @@ void BSP_SENSOR_GYR_SetFullScale(int32_t Fullscale)
 {
   (void)IKS01A2_MOTION_SENSOR_SetFullScale(IKS01A2_LSM6DSL_0, MOTION_GYRO, Fullscale);
 }
+#endif
 
 /**
   * @brief  Set full scale for magnetometer
@@ -416,9 +278,14 @@ void BSP_SENSOR_MAG_SetFullScale(int32_t Fullscale)
   */
 void BSP_SENSOR_ACC_GetFullScale(int32_t *Fullscale)
 {
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
   (void)IKS01A2_MOTION_SENSOR_GetFullScale(IKS01A2_LSM6DSL_0, MOTION_ACCELERO, Fullscale);
+#elif (USE_IKS01A2_MOTION_SENSOR_LSM303AGR_ACC_0 == 1)
+  (void)IKS01A2_MOTION_SENSOR_GetFullScale(IKS01A2_LSM303AGR_ACC_0, MOTION_ACCELERO, Fullscale);
+#endif
 }
 
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 /**
   * @brief  Get full scale for gyroscope
   * @param  Fullscale Fullscale value
@@ -428,6 +295,7 @@ void BSP_SENSOR_GYR_GetFullScale(int32_t *Fullscale)
 {
   (void)IKS01A2_MOTION_SENSOR_GetFullScale(IKS01A2_LSM6DSL_0, MOTION_GYRO, Fullscale);
 }
+#endif
 
 /**
   * @brief  Get full scale for magnetometer

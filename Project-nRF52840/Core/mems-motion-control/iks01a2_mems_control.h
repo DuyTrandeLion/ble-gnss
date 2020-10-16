@@ -27,7 +27,6 @@ extern "C" {
 
 #include "iks01a2_motion_sensors.h"
 #include "iks01a2_motion_sensors_ex.h"
-#include "iks01a2_env_sensors.h"
 #include "sensor_unicleo_id.h"
 
 #define ACC_GYR_UNICLEO_ID    LSM6DSL_UNICLEO_ID
@@ -38,53 +37,51 @@ extern "C" {
 #define MOTION_SENSOR_Axes_t IKS01A2_MOTION_SENSOR_Axes_t
 
 void BSP_SENSOR_ACC_Init(void);
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 void BSP_SENSOR_GYR_Init(void);
+#endif
 void BSP_SENSOR_MAG_Init(void);
-void BSP_SENSOR_PRESS_Init(void);
-void BSP_SENSOR_TEMP_Init(void);
-void BSP_SENSOR_HUM_Init(void);
 
 void BSP_SENSOR_ACC_Enable(void);
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 void BSP_SENSOR_GYR_Enable(void);
+#endif
 void BSP_SENSOR_MAG_Enable(void);
-void BSP_SENSOR_PRESS_Enable(void);
-void BSP_SENSOR_TEMP_Enable(void);
-void BSP_SENSOR_HUM_Enable(void);
 
 void BSP_SENSOR_ACC_Disable(void);
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 void BSP_SENSOR_GYR_Disable(void);
+#endif
 void BSP_SENSOR_MAG_Disable(void);
-void BSP_SENSOR_PRESS_Disable(void);
-void BSP_SENSOR_TEMP_Disable(void);
-void BSP_SENSOR_HUM_Disable(void);
 
 void BSP_SENSOR_ACC_GetAxes(IKS01A2_MOTION_SENSOR_Axes_t *Axes);
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 void BSP_SENSOR_GYR_GetAxes(IKS01A2_MOTION_SENSOR_Axes_t *Axes);
+#endif
 void BSP_SENSOR_MAG_GetAxes(IKS01A2_MOTION_SENSOR_Axes_t *Axes);
-void BSP_SENSOR_PRESS_GetValue(float *Value);
-void BSP_SENSOR_TEMP_GetValue(float *Value);
-void BSP_SENSOR_HUM_GetValue(float *Value);
 
 void BSP_SENSOR_ACC_SetOutputDataRate(float Odr);
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 void BSP_SENSOR_GYR_SetOutputDataRate(float Odr);
+#endif
 void BSP_SENSOR_MAG_SetOutputDataRate(float Odr);
-void BSP_SENSOR_PRESS_SetOutputDataRate(float Odr);
-void BSP_SENSOR_TEMP_SetOutputDataRate(float Odr);
-void BSP_SENSOR_HUM_SetOutputDataRate(float Odr);
 
 void BSP_SENSOR_ACC_GetOutputDataRate(float *Odr);
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 void BSP_SENSOR_GYR_GetOutputDataRate(float *Odr);
+#endif
 void BSP_SENSOR_MAG_GetOutputDataRate(float *Odr);
-void BSP_SENSOR_PRESS_GetOutputDataRate(float *Odr);
-void BSP_SENSOR_TEMP_GetOutputDataRate(float *Odr);
-void BSP_SENSOR_HUM_GetOutputDataRate(float *Odr);
 
 void BSP_SENSOR_ACC_SetFullScale(int32_t Fullscale);
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 void BSP_SENSOR_GYR_SetFullScale(int32_t Fullscale);
+#endif
 void BSP_SENSOR_MAG_SetFullScale(int32_t Fullscale);
 
 void BSP_SENSOR_ACC_GetFullScale(int32_t *Fullscale);
+#if (USE_IKS01A2_MOTION_SENSOR_LSM6DSL_0 == 1)
 void BSP_SENSOR_GYR_GetFullScale(int32_t *Fullscale);
+#endif
 void BSP_SENSOR_MAG_GetFullScale(int32_t *Fullscale);
 
 #endif /* IKS01A2_MEMS_CONTROL_EX_H */

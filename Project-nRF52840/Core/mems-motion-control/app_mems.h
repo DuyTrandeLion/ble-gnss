@@ -30,8 +30,16 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "nordic_common.h"
+#include "nrf.h"
+#include "nrf_assert.h"
+#include "nrf_error.h"
+#include "boards.h"
+
+#include "nrf_drv_timer.h"
 
 /* Exported defines ----------------------------------------------------------*/
+#define MEMS_TIMER_INSTANCE 3
 
 /* Exported functions --------------------------------------------------------*/
 void MX_MEMS_Init(void);
