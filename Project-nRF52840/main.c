@@ -84,14 +84,12 @@
 
 #include "oled.h"
 #include "gnss.h"
-#include "app_mems.h"
 
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
 
-#define DEVICE_NAME                     "Nordic_CatTrack"                           /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME               "NordicSemiconductor"                       /**< Manufacturer. Will be passed to Device Information Service. */
 #define MODEL_NUMBER                    "nRF52"                                     /**< Model Number string. Will be passed to Device Information Service. */
 #define MANUFACTURER_ID                 0x55AA55AA55                                /**< DUMMY Manufacturer ID. Will be passed to Device Information Service. You shall use the ID for your Company*/
@@ -1525,9 +1523,8 @@ int main(void)
     conn_params_init();
     peer_manager_init();
 
-    MX_MEMS_Init();
-//    oled_init();
-//    gnss_init();
+    oled_init();
+    gnss_init();
 
     // Start execution.
     NRF_LOG_INFO("Positioning example started.");
@@ -1537,7 +1534,6 @@ int main(void)
     // Enter main loop.
     for (;;)
     {
-//        MX_MEMS_Process();
         idle_state_handle();
     }
 }

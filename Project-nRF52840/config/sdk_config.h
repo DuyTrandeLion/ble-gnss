@@ -286,7 +286,7 @@
 
 // <s> DEVICE_NAME - Name of the device. Will be included in the advertising data.
 #ifndef DEVICE_NAME
-#define DEVICE_NAME "Nordic_ble_interactive"
+#define DEVICE_NAME "Nordic_CatTrack"
 #endif
 
 // <o> DEVICE_NAME_MAX_SIZE - Max device name length.

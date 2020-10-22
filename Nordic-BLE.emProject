@@ -833,9 +833,11 @@
       <configuration Name="Debug" build_exclude_from_build="No" />
       <configuration Name="Release" build_exclude_from_build="No" />
       <file file_name="../nRF5_SDK_17.0.0_9d13099/external/nrf_cc310/lib/cortex-m4/hard-float/libnrf_cc310_0.9.13.a">
+        <configuration Name="Debug" build_exclude_from_build="No" />
+      </file>
+      <file file_name="../nRF5_SDK_17.0.0_9d13099/external/nrf_cc310/lib/cortex-m4/soft-float/libnrf_cc310_0.9.13.a">
         <configuration Name="Debug" build_exclude_from_build="Yes" />
       </file>
-      <file file_name="../nRF5_SDK_17.0.0_9d13099/external/nrf_cc310/lib/cortex-m4/soft-float/libnrf_cc310_0.9.13.a" />
     </folder>
     <folder Name="components/nRF_Libraries">
       <folder Name="atomic">
@@ -1294,14 +1296,6 @@
       <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc" />
       <file file_name="main.c" />
       <file file_name="config/sdk_config.h" />
-      <folder Name="ublox-neo">
-        <file file_name="Core/ublox-neo/gnss.c" />
-        <file file_name="Core/ublox-neo/gnss.h" />
-        <file file_name="Core/ublox-neo/gnss_type.h" />
-        <file file_name="Core/ublox-neo/gnss_util.c" />
-        <file file_name="Core/ublox-neo/gnss_util.h" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-      </folder>
       <folder Name="Ublox_GPS_GNSS">
         <file file_name="Core/Ublox_GPS_GNSS/UBX_GNSS.c" />
         <file file_name="Core/Ublox_GPS_GNSS/UBX_GNSS.h" />
@@ -1323,45 +1317,19 @@
         <file file_name="Core/oled/oled.c" />
         <file file_name="Core/oled/oled.h" />
       </folder>
-      <folder Name="motion">
-        <file file_name="Core/motion/iks01a2_motion_sensors.c" />
-        <file file_name="Core/motion/iks01a2_motion_sensors.h" />
-        <file file_name="Core/motion/iks01a2_motion_sensors_ex.c" />
-        <file file_name="Core/motion/iks01a2_motion_sensors_ex.h" />
-        <file file_name="Core/motion/motion_ec.h" />
-        <file file_name="Core/motion/motion_mc.h" />
-        <file file_name="Core/motion/motion_mc_cm0p.h" />
-        <file file_name="Core/motion/motion_sensor.h" />
-        <file file_name="Core/motion/MotionEC_CM4F_wc32_ot.a" />
-        <file file_name="Core/motion/MotionMC_CM4F_wc32_ot.a" />
-        <file file_name="Core/motion/iks01a2_conf.h" />
-        <file file_name="Core/motion/errno.h" />
-        <file file_name="Core/motion/com_bus.c" />
-        <file file_name="Core/motion/com_bus.h" />
-      </folder>
-      <folder Name="lsm303agr">
-        <file file_name="Core/lsm303agr/lsm303agr.c" />
-        <file file_name="Core/lsm303agr/lsm303agr.h" />
-        <file file_name="Core/lsm303agr/lsm303agr_reg.c" />
-        <file file_name="Core/lsm303agr/lsm303agr_reg.h" />
-      </folder>
-      <folder Name="mems-motion-control">
-        <file file_name="Core/mems-motion-control/app_mems.c" />
-        <file file_name="Core/mems-motion-control/app_mems.h" />
-        <file file_name="Core/mems-motion-control/iks01a2_mems_control.c" />
-        <file file_name="Core/mems-motion-control/iks01a2_mems_control.h" />
-        <file file_name="Core/mems-motion-control/iks01a2_mems_control_ex.c" />
-        <file file_name="Core/mems-motion-control/iks01a2_mems_control_ex.h" />
-        <file file_name="Core/mems-motion-control/motion_ec_manager.c" />
-        <file file_name="Core/mems-motion-control/motion_ec_manager.h" />
-        <file file_name="Core/mems-motion-control/motion_mc_manager.c" />
-        <file file_name="Core/mems-motion-control/motion_mc_manager.h" />
+      <folder Name="ublox-neo">
+        <file file_name="Core/ublox-neo/gnss.c" />
+        <file file_name="Core/ublox-neo/gnss.h" />
+        <file file_name="Core/ublox-neo/gnss_type.h" />
+        <file file_name="Core/ublox-neo/gnss_util.c" />
+        <file file_name="Core/ublox-neo/gnss_util.h" />
         <configuration Name="Debug" build_exclude_from_build="No" />
-        <file file_name="Core/mems-motion-control/sensor_unicleo_id.h" />
-        <file file_name="Core/mems-motion-control/demo_serial.h" />
       </folder>
     </folder>
-    <configuration Name="Debug" arm_fp_abi="SoftFP" />
+    <configuration
+      Name="Debug"
+      arm_fp_abi="Hard"
+      arm_linker_stack_size="8192" />
   </project>
   <configuration
     Name="Debug"
