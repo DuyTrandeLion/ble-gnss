@@ -4,27 +4,13 @@
 #include <stdint.h>
 
 #include "ble_lns.h"
-#include "nrf_gpio.h"
+
+#include "ssd1309.h"
+#include "ssd1309_fonts.h"
+#include "Miscellaneous.h"
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-
-#define OLED_SPI_INSTANCE	    2
-
-#define OLED_SCK_PIN	      ARDUINO_11_PIN
-#define OLED_MOSI_PIN	      ARDUINO_12_PIN
-#define OLED_SS_PIN	      ARDUINO_A2_PIN
-#define OLED_DC_PIN           ARDUINO_9_PIN
-#define OLED_RES_PIN          ARDUINO_13_PIN
-
-#ifndef GPIO_PIN_SET
-#define GPIO_PIN_SET          1
-#endif
-
-#ifndef GPIO_PIN_RESET
-#define GPIO_PIN_RESET        0
 #endif
 
 

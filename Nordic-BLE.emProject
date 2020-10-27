@@ -17,7 +17,7 @@
       arm_target_device_name="nRF52840_xxAA"
       arm_target_interface_type="SWD"
       c_preprocessor_definitions="APP_TIMER_V2 ;APP_TIMER_V2_RTC1_ENABLED;BOARD_PCA10056;CONFIG_GPIO_AS_PINRESET;FLOAT_ABI_HARD;INITIALIZE_USER_SECTIONS;MBEDTLS_CONFIG_FILE=&quot;nrf_crypto_mbedtls_config.h&quot;;NO_VTOR_CONFIG;NRF52840_XXAA;NRF_APP_VERSION=0x00000001;NRF_APP_VERSION_ADDR=0x1D000;NRF_CRYPTO_MAX_INSTANCE_COUNT=1;NRF_SD_BLE_API_VERSION=7;S140;SOFTDEVICE_PRESENT;SWI_DISABLE0;uECC_ENABLE_VLI_API=0;uECC_OPTIMIZATION_LEVEL=3;uECC_SQUARE_FUNC=0;uECC_SUPPORT_COMPRESSED_POINT=0;uECC_VLI_NATIVE_LITTLE_ENDIAN=1;SSD1309_USE_SPI"
-      c_user_include_directories="$(SolutionDir)/nRF5_SDK_17.0.0_9d13099/components/softdevice/s140/headers;$(SolutionDir)/nRF5_SDK_17.0.0_9d13099/components/softdevice/s140/headers/nrf52;$(ProjectDir)/Core/ublox-neo;$(ProjectDir)/Core/Ublox_GPS_GNSS;$(ProjectDir)/Core/Miscellaneous;$(ProjectDir)/Core/ssd1309;$(ProjectDir)/Core/oled;$(ProjectDir)/Core/lsm303agr;$(ProjectDir)/Core/motion;$(ProjectDir)/Core/mems-motion-control"
+      c_user_include_directories="$(SolutionDir)/nRF5_SDK_17.0.0_9d13099/components/softdevice/s140/headers;$(SolutionDir)/nRF5_SDK_17.0.0_9d13099/components/softdevice/s140/headers/nrf52;$(ProjectDir)/Core/ublox-neo;$(ProjectDir)/Core/Ublox_GPS_GNSS;$(ProjectDir)/Core/Miscellaneous;$(ProjectDir)/Core/ssd1309;$(ProjectDir)/Core/oled;$(ProjectDir)/Core/ICP101xx;$(ProjectDir)/Core/barometer;$(ProjectDir)/Core/peripherals"
       debug_additional_load_file="$(SolutionDir)/nRF5_SDK_17.0.0_9d13099/components/softdevice/s140/hex/s140_nrf52_7.0.1_softdevice.hex"
       debug_register_definition_file="$(SolutionDir)/nRF5_SDK_17.0.0_9d13099/modules/nrfx/mdk/nrf52840.svd"
       debug_start_from_entry_point_symbol="No"
@@ -1302,11 +1302,6 @@
         <file file_name="Core/Ublox_GPS_GNSS/lwgps.c" />
         <file file_name="Core/Ublox_GPS_GNSS/lwgps.h" />
       </folder>
-      <folder Name="Miscellaneous">
-        <file file_name="Core/Miscellaneous/Miscellaneous.c" />
-        <file file_name="Core/Miscellaneous/Miscellaneous.h" />
-        <file file_name="Core/Miscellaneous/macros_common.h" />
-      </folder>
       <folder Name="ssd1309">
         <file file_name="Core/ssd1309/ssd1309.c" />
         <file file_name="Core/ssd1309/ssd1309.h" />
@@ -1324,6 +1319,23 @@
         <file file_name="Core/ublox-neo/gnss_util.c" />
         <file file_name="Core/ublox-neo/gnss_util.h" />
         <configuration Name="Debug" build_exclude_from_build="No" />
+      </folder>
+      <folder Name="Miscellaneous">
+        <file file_name="Core/Miscellaneous/Miscellaneous.c" />
+        <file file_name="Core/Miscellaneous/Miscellaneous.h" />
+        <file file_name="Core/Miscellaneous/macros_common.h" />
+      </folder>
+      <folder Name="ICP101xx">
+        <file file_name="Core/ICP101xx/ICP101xx.c" />
+        <file file_name="Core/ICP101xx/ICP101xx.h" />
+      </folder>
+      <folder Name="barometer">
+        <file file_name="Core/barometer/barometer.h" />
+        <file file_name="Core/barometer/barometer.c" />
+      </folder>
+      <folder Name="peripherals">
+        <file file_name="Core/peripherals/peripherals.c" />
+        <file file_name="Core/peripherals/peripherals.h" />
       </folder>
     </folder>
     <configuration

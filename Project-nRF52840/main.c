@@ -76,14 +76,17 @@
 #include "peer_manager_handler.h"
 #include "bsp_btn_ble.h"
 #include "fds.h"
+#include "nrf_delay.h"
 #include "ble_conn_state.h"
 #include "nrf_ble_gatt.h"
 #include "nrf_ble_lesc.h"
 #include "nrf_ble_qwr.h"
 #include "nrf_pwr_mgmt.h"
 
+#include "peripherals.h"
 #include "oled.h"
 #include "gnss.h"
+#include "barometer.h"
 
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
@@ -101,12 +104,9 @@
 #define APP_ADV_INTERVAL                40                                          /**< The advertising interval (in units of 0.625 ms. This value corresponds to 25 ms). */
 #define APP_ADV_DURATION                18000                                       /**< The advertising duration (180 seconds) in units of 10 milliseconds. */
 
-#define BATTERY_LEVEL_MEAS_INTERVAL     APP_TIMER_TICKS(10000)                      /**< Battery level measurement interval (ticks). */
 #define MIN_BATTERY_LEVEL               81                                          /**< Minimum battery level as returned by the simulated measurement function. */
 #define MAX_BATTERY_LEVEL               100                                         /**< Maximum battery level as returned by the simulated measurement function. */
 #define BATTERY_LEVEL_INCREMENT         1                                           /**< Value by which the battery level is incremented/decremented for each call to the simulated measurement function. */
-
-#define LOC_AND_NAV_DATA_INTERVAL       APP_TIMER_TICKS(1000)                       /**< Location and Navigation data interval (ticks). */
 
 #define MIN_CONN_INTERVAL               MSEC_TO_UNITS(10, UNIT_1_25_MS)             /**< Minimum acceptable connection interval (10 ms). */
 #define MAX_CONN_INTERVAL               MSEC_TO_UNITS(100, UNIT_1_25_MS)            /**< Maximum acceptable connection interval (100 ms) */
@@ -148,8 +148,6 @@ NRF_BLE_QWR_DEF(m_qwr);                                                         
 BLE_ADVERTISING_DEF(m_advertising);                                                 /**< Advertising module instance. */
 BLE_DB_DISCOVERY_DEF(m_ble_db_discovery);                                           /**< DB discovery module instance. */
 
-APP_TIMER_DEF(m_battery_timer_id);                                                  /**< Battery timer. */
-APP_TIMER_DEF(m_loc_and_nav_timer_id);                                              /**< Location and navigation measurement timer. */
 
 NRF_BLE_GQ_DEF(m_ble_gatt_queue,                                                    /**< BLE GATT Queue instance. */
                NRF_SDH_BLE_PERIPHERAL_LINK_COUNT,
@@ -200,13 +198,13 @@ static const ble_lns_loc_speed_t initial_lns_location_speed =
     .utc_time_time_present   = true,
     .position_status         = BLE_LNS_NO_POSITION,
     .data_format             = BLE_LNS_SPEED_DISTANCE_FORMAT_2D,
-    .elevation_source        = BLE_LNS_ELEV_SOURCE_POSITIONING_SYSTEM,
+    .elevation_source        = BLE_LNS_ELEV_SOURCE_BAROMETRIC,
     .heading_source          = BLE_LNS_HEADING_SOURCE_COMPASS,
     .instant_speed           = 12,         // = 1.2 meter/second
     .total_distance          = 0,          // = 2356 meters
     .latitude                = -103123567, // = -10.3123567 degrees
     .longitude               = 601234567,  // = 60.1234567 degrees
-    .elevation               = 1350,       // = 13.5 meter
+    .elevation               = 1200,       // = 12.00 meter
     .heading                 = 2123,       // = 21.23 degrees
     .rolling_time            = 0,          // = 1 second
     .utc_time                =
@@ -578,20 +576,6 @@ static void battery_level_update(void)
 }
 
 
-/**@brief Function for handling the Battery measurement timer timeout.
- *
- * @details This function will be called each time the battery level measurement timer expires.
- *
- * @param[in] p_context  Pointer used for passing some arbitrary information (context) from the
- *                       app_start_timer() call to the timeout handler.
- */
-static void battery_level_meas_timeout_handler(void * p_context)
-{
-    UNUSED_PARAMETER(p_context);
-    battery_level_update();
-}
-
-
 static void update_time(ble_date_time_t * p_time)
 {
     if (NULL != p_time)
@@ -629,12 +613,23 @@ static void position_quality_update(void)
  */
 static void loc_speed_update(void)
 {
+    float elevation;
+
     m_location_speed.position_status = (0 != UBXGNSS_GET_FIX(GNSS_DEV))? BLE_LNS_POSITION_OK : BLE_LNS_NO_POSITION;
     m_location_speed.data_format = ((2 == UBXGNSS_GET_FIX_MODE(GNSS_DEV))? BLE_LNS_SPEED_DISTANCE_FORMAT_2D :
                                     (3 == UBXGNSS_GET_FIX_MODE(GNSS_DEV))? BLE_LNS_SPEED_DISTANCE_FORMAT_3D : BLE_LNS_SPEED_DISTANCE_FORMAT_2D);
     m_location_speed.latitude = (UBXGNSS_GET_LATITUDE(GNSS_DEV) * 10000000);
     m_location_speed.longitude = (UBXGNSS_GET_LONGITUDE(GNSS_DEV) * 10000000);
-    m_location_speed.elevation = (UBXGNSS_GET_ALTITUDE(GNSS_DEV) * 100);
+
+    if (BLE_LNS_ELEV_SOURCE_POSITIONING_SYSTEM == m_location_speed.elevation_source)
+    {
+        m_location_speed.elevation = (UBXGNSS_GET_ALTITUDE(GNSS_DEV) * 100);
+    }
+    else if (BLE_LNS_ELEV_SOURCE_BAROMETRIC == m_location_speed.elevation_source)
+    {
+        barometer_get_altitude(&elevation);
+        m_location_speed.elevation = (uint32_t)(elevation * 100);
+    }
 //    m_location_speed.instant_speed = (UBXGNSS_GET_INSTANT_SPEED(GNSS_DEV, lwgps_speed_mph) * 10);
 
     /* Read from sensors */
@@ -656,11 +651,9 @@ static void loc_speed_update(void)
  * @param[in]   p_context   Pointer used for passing some arbitrary information (context) from the
  *                          app_start_timer() call to the time-out handler.
  */
-static void loc_and_nav_timeout_handler(void * p_context)
+static void lns_timeout_handler(void)
 {
     ret_code_t err_code;
-
-    UNUSED_PARAMETER(p_context);
 
     loc_speed_update();
     position_quality_update();
@@ -679,31 +672,6 @@ static void loc_and_nav_timeout_handler(void * p_context)
     }
 
     oled_navigation_screen(&m_lns, m_display_screen_select);
-}
-
-
-/**@brief Function for the Timer initialization.
- *
- * @details Initializes the timer module. This creates and starts application timers.
- */
-static void timers_init(void)
-{
-    ret_code_t err_code;
-
-    // Initialize timer module.
-    err_code = app_timer_init();
-    APP_ERROR_CHECK(err_code);
-
-    // Create timers.
-    err_code = app_timer_create(&m_battery_timer_id,
-                                APP_TIMER_MODE_REPEATED,
-                                battery_level_meas_timeout_handler);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = app_timer_create(&m_loc_and_nav_timer_id,
-                                APP_TIMER_MODE_REPEATED,
-                                loc_and_nav_timeout_handler);
-    APP_ERROR_CHECK(err_code);
 }
 
 
@@ -984,21 +952,6 @@ static void db_discovery_init(void)
 
     err_code = ble_db_discovery_init(&db_init);
 
-    APP_ERROR_CHECK(err_code);
-}
-
-
-/**@brief Function for starting application timers.
- */
-static void application_timers_start(void)
-{
-    ret_code_t err_code;
-
-    // Start application timers.
-    err_code = app_timer_start(m_battery_timer_id, BATTERY_LEVEL_MEAS_INTERVAL, NULL);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = app_timer_start(m_loc_and_nav_timer_id, LOC_AND_NAV_DATA_INTERVAL, NULL);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -1510,8 +1463,9 @@ int main(void)
 
     // Initialize.
     log_init();
-    timers_init();
+    peripherals_init();
     buttons_leds_init(&erase_bonds);
+
     power_management_init();
     ble_stack_init();
     gap_params_init();
@@ -1523,17 +1477,22 @@ int main(void)
     conn_params_init();
     peer_manager_init();
 
-    oled_init();
     gnss_init();
+    barometer_init();
+    oled_init();
+
+    peripherals_assign_comm_handle(TIMER_BATTERY, battery_level_update);
+    peripherals_assign_comm_handle(TIMER_LNS, lns_timeout_handler);
 
     // Start execution.
     NRF_LOG_INFO("Positioning example started.");
-    application_timers_start();
+    peripherals_start_timers();
     advertising_start(erase_bonds);
 
     // Enter main loop.
     for (;;)
     {
+        comm_handle_polling();
         idle_state_handle();
     }
 }
