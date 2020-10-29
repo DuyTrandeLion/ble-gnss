@@ -125,14 +125,6 @@
  </Watch4>
  <Files>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1460" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/main.c" selected="1" top="1460" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="13" y="169" useTextEdit="1" openedFrom="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/main.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/peripherals/peripherals.c" selected="0" top="149" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="54" y="36" useTextEdit="1" openedFrom="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/Core/peripherals/peripherals.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/peripherals/peripherals.h" selected="0" top="46" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="71" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/barometer/barometer.c" selected="0" top="60" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="10" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/barometer/barometer.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="37" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/ublox-neo/gnss.c" selected="0" top="2" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/ublox-neo/gnss.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="56" useTextEdit="1" openedFrom="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/main.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/oled/oled.c" selected="0" top="32" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/oled/oled.h" selected="0" top="0" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="BLE-nRF52840" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="D:/Nordic-Embedded/ble-rd/nRF5_SDK_17.0.0_9d13099/modules/nrfx/mdk/ses_startup_nrf52840.s&#xa;D:/Nordic-Embedded/ble-gnss/nRF5_SDK_17.0.0_9d13099/modules/nrfx/mdk/ses_startup_nrf52840.s" fileDialogInitialDirectory="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/Core/peripherals" debugSearchPath="" autoConnectCapabilities="3711"/>
+ <ARMCrossStudioWindow activeProject="BLE-nRF52840" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="D:/Nordic-Embedded/ble-rd/nRF5_SDK_17.0.0_9d13099/modules/nrfx/mdk/ses_startup_nrf52840.s&#xa;D:/Nordic-Embedded/ble-gnss/nRF5_SDK_17.0.0_9d13099/modules/nrfx/mdk/ses_startup_nrf52840.s" fileDialogInitialDirectory="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/Core/peripherals" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

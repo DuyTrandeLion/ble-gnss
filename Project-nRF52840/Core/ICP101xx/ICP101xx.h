@@ -66,7 +66,7 @@ typedef enum
 /**
  * Communication event callback type.
  *
- * This function is called when there is SPI communication.
+ * @brief This function is called when there is I2C communication.
  *
  * @param[in] ICP_Event_t 	SPI/I2C Event type.
  * @param[in] uint16_t		Device address.
@@ -75,6 +75,7 @@ typedef enum
  * @param[in] void *		Pointer to parameter of event handler
  *
  * @retval ICP_OK If the notification was sent successfully. Otherwise, an error code is returned.
+ *
  */
 typedef ICPPress_State_t (*ICPPress_Com_Handle_t)(ICPPress_Event_t, uint16_t, uint8_t *, uint16_t, void *);
 
@@ -83,6 +84,7 @@ typedef ICPPress_State_t (*ICPPress_Com_Handle_t)(ICPPress_Event_t, uint16_t, ui
  * Busy time counting handle callback.
  *
  * @retval true 	If the device is busy
+ *
  */
 typedef uint8_t (*ICPPress_Delay_Handle_t)(uint32_t);
 
@@ -102,15 +104,78 @@ typedef struct
 } ICPPRess_Def_t;
 
 
+/**
+ * @brief Function sends a command to read calibration data from OTP sensor and other initialization data, which is necessary for calculations.
+ *
+ * @param[in] locICPPress_p     Object where initialization data and data from OTP sensor to be stored
+ *
+ * @retval ICP_OK If the notification was sent successfully. Otherwise, an error code is returned.
+ *
+ * @note The reading from OTP sensor should be performed after power up or after SW reset.
+ *
+ */
 ICPPress_State_t ICPPress_Init(ICPPRess_Def_t *locICPPress_p);
 
 
+/**
+ * @brief Function sends a command to perform a SW Reset of the device.
+ *
+ * @param[in] locICPPress_p     Object where initialization data and data from OTP sensor to be stored
+ *
+ * @note This command triggers the sensor to reset all internal state machines and reload calibration data from the memory.
+ *
+ */
+void ICPPress_SoftReset(ICPPRess_Def_t *locICPPress_p);
+
+
+/**
+ * @brief Read ID function
+ *
+ * @param[in] locICPPress_p     Object where initialization data and data from OTP sensor to be stored
+ * @param[out] locDeviceID_u16  Pointer to memory where device ID to be stored
+ *
+ * @retval ICP_OK If the notification was sent successfully. Otherwise, an error code is returned.
+ *
+ */
+ICPPress_State_t ICPPress_ReadID(ICPPRess_Def_t *locICPPress_p, uint16_t *locDeviceID_u16);
+
+
+/**
+ * @brief Configure a measurement mode and data reading order
+ *
+ * @param[in] locICPPress_p     Object where initialization data and data from OTP sensor to be stored
+ * @param[in] locModeCmd_u16    Measuring mode to be set
+ *
+ * @retval ICP_OK If the notification was sent successfully. Otherwise, an error code is returned.
+ *
+ */
 ICPPress_State_t ICPPress_SetMeasurementMode(ICPPRess_Def_t *locICPPress_p, uint16_t locModeCmd_u16);
 
 
+/**
+ * @brief Read Raw ADC data including 16-bit temperature and 24-bit pressure
+ *
+ * @param[in] locICPPress_p           Object where initialization data and data from OTP sensor be stored
+ * @param[out] locRawTemperature_p16  Pointer to memory where Temperature ADC to be stored
+ * @param[out] locRawPressure_p32     Pointer to memory where Pressure ADC to be stored
+ *
+ * @retval ICP_OK If the notification was sent successfully. Otherwise, an error code is returned.
+ *
+ */
 ICPPress_State_t ICPPress_ReadRawData(ICPPRess_Def_t *locICPPress_p, int16_t *locRawTemperature_p16, uint32_t *locRawPressure_p32);
 
 
+/**
+ * @brief Read Raw ADC data then calculate these values to standard units.
+ *
+ * @param[in] locICPPress_p       Object where initialization data and data from OTP sensor be stored
+ * @param[out] locTemperature_pf  Pointer to memory wher Temperature to be stored
+ * @param[out] locPressure_pf     Pointer to memory where Pressure to be stored
+ * @param[out] locAltitude_pf     Pointer to memory where Altitude to be stored
+ *
+ * @retval ICP_OK If the notification was sent successfully. Otherwise, an error code is returned.
+ *
+ */
 ICPPress_State_t ICPPress_GetProcessedData(ICPPRess_Def_t *locICPPress_p, float *locTemperature_pf, float *locPressure_pf, float *locAltitude_pf);
  
 #ifdef __cplusplus

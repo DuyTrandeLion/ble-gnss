@@ -68,6 +68,41 @@ ICPPress_State_t ICPPress_Init(ICPPRess_Def_t *locICPPress_p)
 }
 
 
+void ICPPress_SoftReset(ICPPRess_Def_t *locICPPress_p)
+{
+    uint8_t locWriteData_au8[2] = {0x80, 0x5D};
+
+    NULL_CHECK_PARAM(locICPPress_p);
+
+    locICPPress_p->commHandle(I2C_EVENT_TRANSMIT, ICP_I2C_ADDRESS, locWriteData_au8, 2, NULL);
+
+    gUpdateCheck_u8 = 0;
+}
+
+
+ICPPress_State_t ICPPress_ReadID(ICPPRess_Def_t *locICPPress_p, uint16_t *locDeviceID_u16)
+{
+    uint8_t locWriteData_au8[2] = {0xEF, 0xC8};
+    uint8_t locReadData_au8[3];
+
+    NULL_CHECK_PARAM(locICPPress_p);
+
+    if (ICP_OK != locICPPress_p->commHandle(I2C_EVENT_TRANSMIT, ICP_I2C_ADDRESS, locWriteData_au8, 2, NULL))
+    {
+        return ICP_COMM_ERROR;
+    }
+
+    if (ICP_OK != locICPPress_p->commHandle(I2C_EVENT_RECEIVE, ICP_I2C_ADDRESS, locReadData_au8, 3, NULL))
+    {
+        return ICP_COMM_ERROR;
+    }
+
+    *locDeviceID_u16 = (locReadData_au8[0] << 8) | locReadData_au8[1];
+
+    return ICP_OK;
+}
+
+
 ICPPress_State_t ICPPress_SetMeasurementMode(ICPPRess_Def_t *locICPPress_p, uint16_t locModeCmd_u16)
 {
     ICPPress_State_t locRet = ICP_OK;
