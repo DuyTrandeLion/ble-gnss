@@ -15,11 +15,20 @@ static void barometer_timer_event_handler(void);
 
 static ICPPress_State_t barometer_comm_handle(ICPPress_Event_t icp_event, uint16_t device_address, uint8_t *data_buffer, uint16_t data_buffer_size, void *context)
 {
+    uint8_t restart_i2c;
     switch (icp_event)
     {
         case I2C_EVENT_TRANSMIT:
         {
-            return peripherals_twi_tx(device_address, data_buffer, data_buffer_size);
+            if (NULL == context)
+            {
+                return peripherals_twi_tx(device_address, data_buffer, data_buffer_size, false);
+            }
+            else
+            {
+                restart_i2c = *((uint8_t *)context);
+                return peripherals_twi_tx(device_address, data_buffer, data_buffer_size, restart_i2c);
+            }
             break;
         }
         

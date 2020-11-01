@@ -29,6 +29,8 @@ static comm_handle_fptr m_timer_ubx_handle;
 static comm_handle_fptr m_timer_barometer_read_sensor_handle;
 static comm_handle_fptr m_timer_battery_handler;
 static comm_handle_fptr m_timer_lns_handler;
+static comm_handle_fptr m_ecompass_read_handle;
+static comm_handle_fptr m_ecompass_write_handle;
 
 APP_TIMER_DEF(m_battery_timer_id);                                                  /**< Battery timer. */
 APP_TIMER_DEF(m_loc_and_nav_timer_id);                                              /**< Location and navigation measurement timer. */
@@ -202,9 +204,9 @@ void peripherals_start_timers(void)
 }
 
 
-ret_code_t peripherals_twi_tx(uint16_t device_address, uint8_t *data, uint16_t data_size)
+ret_code_t peripherals_twi_tx(uint16_t device_address, uint8_t *data, uint16_t data_size, bool no_stop)
 {
-    return nrf_drv_twi_tx(&m_gbc_twi, device_address, data, data_size, true);
+    return nrf_drv_twi_tx(&m_gbc_twi, device_address, data, data_size, no_stop);
 }
 
 
@@ -393,6 +395,18 @@ void peripherals_assign_comm_handle(uint8_t comm_handle_type, comm_handle_fptr c
             case BAROMETER_COMM:
             {
                 m_barometer_comm_handle = comm_handle;           
+                break;
+            }
+
+            case ECOMPASS_READ:
+            {
+                m_ecompass_read_handle = comm_handle; 
+                break;
+            }
+
+            case ECOMPASS_WRITE:
+            {
+                m_ecompass_write_handle = comm_handle; 
                 break;
             }
 

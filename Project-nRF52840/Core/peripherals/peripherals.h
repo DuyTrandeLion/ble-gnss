@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "nordic_common.h"
 #include "nrf.h"
@@ -69,16 +70,17 @@ extern "C" {
 #define BAROMETER_TRIGGER_PERIOD        3
 
 #define GNSS_COMM                       1
-#define BAROMETER_COMM                  2
-#define CRYPTO_COMM                     3
-#define COMPASS_COMM                    4
-#define OLED_COMM                       5
-#define UART_DATA_READY                 6
-#define TIMER_GNSS                      7
-#define TIMER_UBX                       8
-#define TIMER_BAROMETER                 9
-#define TIMER_BATTERY                   10
-#define TIMER_LNS                       11
+#define BAROMETER_COMM                  (GNSS_COMM + 1)
+#define ECOMPASS_READ                   (BAROMETER_COMM + 1)
+#define ECOMPASS_WRITE                  (ECOMPASS_READ + 1)
+#define CRYPTO_COMM                     (ECOMPASS_WRITE + 1)
+#define OLED_COMM                       (CRYPTO_COMM + 1)
+#define UART_DATA_READY                 (OLED_COMM + 1)
+#define TIMER_GNSS                      (UART_DATA_READY + 1)
+#define TIMER_UBX                       (TIMER_GNSS + 1)
+#define TIMER_BAROMETER                 (TIMER_UBX + 1)
+#define TIMER_BATTERY                   (TIMER_BAROMETER + 1)
+#define TIMER_LNS                       (TIMER_BATTERY + 1)
 
 typedef void (*comm_handle_fptr)(void);
 
@@ -88,7 +90,7 @@ void peripherals_start_timers(void);
 void peripherals_assign_comm_handle(uint8_t comm_handle_type, comm_handle_fptr comm_handle);
 
 void peripherals_app_uart_get(uint8_t * p_byte);
-ret_code_t peripherals_twi_tx(uint16_t device_address, uint8_t *data, uint16_t data_size);
+ret_code_t peripherals_twi_tx(uint16_t device_address, uint8_t *data, uint16_t data_size, bool no_stop);
 ret_code_t peripherals_twi_rx(uint16_t device_address, uint8_t *data, uint16_t data_size);
 
 void peripherals_oled_reset(void);

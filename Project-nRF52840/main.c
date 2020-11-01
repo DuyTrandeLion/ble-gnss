@@ -84,9 +84,10 @@
 #include "nrf_pwr_mgmt.h"
 
 #include "peripherals.h"
-#include "oled.h"
 #include "gnss.h"
 #include "barometer.h"
+#include "ecompass.h"
+#include "oled.h"
 
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
@@ -1479,6 +1480,7 @@ int main(void)
 
     gnss_init();
     barometer_init();
+    ecompass_init();
     oled_init();
 
     peripherals_assign_comm_handle(TIMER_BATTERY, battery_level_update);

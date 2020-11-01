@@ -217,8 +217,8 @@ typedef struct
 	uint32_t		timeout;
         uint32_t                timeToFirstFix;       /* ms */
         lwgps_t                 gps;
-	UBXGNSS_Comm_Handle_t 	const commHandle;
-	UBXGNSS_Delay_Handle_t 	const delayHandle;
+	UBXGNSS_Comm_Handle_t 	commHandle;
+	UBXGNSS_Delay_Handle_t 	delayHandle;
 } UBXGNSS_Def_t;
 
 
