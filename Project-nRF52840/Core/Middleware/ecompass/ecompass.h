@@ -10,6 +10,7 @@ extern "C" {
 
 
 void ecompass_init(void);
+void ecompass_get_heading(float *heading);
 
 
 #ifdef __cplusplus

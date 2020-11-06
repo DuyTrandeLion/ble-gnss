@@ -589,11 +589,15 @@ static void update_time(ble_date_time_t * p_time)
 
 static void navigation_update(void)
 {
+    float ecompass_heading;
+
     m_navigation.position_status = (0 != UBXGNSS_GET_FIX(GNSS_DEV))? BLE_LNS_POSITION_OK : BLE_LNS_NO_POSITION;
     m_navigation.waypoint_reached    = !m_navigation.waypoint_reached;
     m_navigation.destination_reached = !m_navigation.destination_reached;
     m_navigation.bearing++;
-    m_navigation.heading++;
+  
+    ecompass_get_heading(&ecompass_heading);
+    m_navigation.heading = ecompass_heading * 100;
 
     update_time(&m_navigation.eta);
 }
@@ -615,6 +619,7 @@ static void position_quality_update(void)
 static void loc_speed_update(void)
 {
     float elevation;
+    float ecompass_heading;
 
     m_location_speed.position_status = (0 != UBXGNSS_GET_FIX(GNSS_DEV))? BLE_LNS_POSITION_OK : BLE_LNS_NO_POSITION;
     m_location_speed.data_format = ((2 == UBXGNSS_GET_FIX_MODE(GNSS_DEV))? BLE_LNS_SPEED_DISTANCE_FORMAT_2D :
@@ -634,7 +639,9 @@ static void loc_speed_update(void)
 //    m_location_speed.instant_speed = (UBXGNSS_GET_INSTANT_SPEED(GNSS_DEV, lwgps_speed_mph) * 10);
 
     /* Read from sensors */
-    m_location_speed.heading++;
+    ecompass_get_heading(&ecompass_heading);
+
+    m_location_speed.heading = ecompass_heading * 100;
 
     if (TRAVEL_STARTED == m_travelling_status)
     {

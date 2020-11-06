@@ -26,7 +26,6 @@ static void ecompass_timer_event_handler(void);
 
 static int8_t bno055_i2c_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t r_len)
 {
-    uint8_t rx_data[255];
     uint8_t register_address = reg_addr;
 
     if (BNO055_SUCCESS != peripherals_twi_tx(dev_addr, &register_address, 1, true))
@@ -34,7 +33,7 @@ static int8_t bno055_i2c_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_d
         return BNO055_ERROR;
     }
 
-    if (BNO055_SUCCESS != peripherals_twi_rx(dev_addr, rx_data, r_len))
+    if (BNO055_SUCCESS != peripherals_twi_rx(dev_addr, reg_data, r_len))
     {
         return BNO055_ERROR;
     }
@@ -45,8 +44,9 @@ static int8_t bno055_i2c_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_d
 static int8_t bno055_i2c_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t wr_len)
 {
     uint8_t tx_data[255];
+    uint8_t register_address = reg_addr;
 
-    tx_data[0] = reg_addr;
+    memcpy(&tx_data[0], &register_address, 1);
     memcpy(&tx_data[1], reg_data, wr_len);
 
     if (BNO055_SUCCESS != peripherals_twi_tx(dev_addr, tx_data, wr_len + 1, false))
@@ -73,7 +73,7 @@ static void ecompass_comm_polling_handle(void)
 
     if (ECOMPASS_TWI_PROCESS_DATA_PERIOD <= m_ecompass_twi_time)
     {
-        APP_ERROR_CHECK(bno055_read_euler_hrp(&m_euler));
+//        APP_ERROR_CHECK(bno055_read_euler_hrp(&m_euler));
         APP_ERROR_CHECK(bno055_convert_float_euler_hpr_deg(&m_euler_data));
         m_ecompass_twi_time = 0;
     }
@@ -101,4 +101,10 @@ void ecompass_init(void)
 
     APP_ERROR_CHECK(bno055_init(&m_bno055));
     APP_ERROR_CHECK(bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF));
+}
+
+
+void ecompass_get_heading(float *heading)
+{
+    *heading = m_euler_data.h;
 }
