@@ -111,7 +111,7 @@ static void ubx_timer_event_handler(void)
 static UBXGNSS_State_t gnss_comm_handler(UBXGNSS_Comm_Event_t event, uint16_t dev_addr, uint16_t reg_addr, uint8_t *data, uint16_t data_size, void *p_context)
 {
     uint8_t register_address = reg_addr;
-    uint8_t data_buffer[256];
+    uint8_t tx_data[UBXGNSS_UBX_MAX_LENGHTH + 1];
 
     switch (event)
     {
@@ -122,9 +122,14 @@ static UBXGNSS_State_t gnss_comm_handler(UBXGNSS_Comm_Event_t event, uint16_t de
 
         case I2C_UBX_EVENT_TRANSMIT:
         {
-            memcpy(&data_buffer[0], &register_address, 1);
-            memcpy(&data_buffer[1], data, data_size);
-            peripherals_twi_tx(dev_addr, data_buffer, data_size + 1, false);
+            memcpy(&tx_data[0], &register_address, 1);
+            memcpy(&tx_data[1], data, data_size);
+            if (UBXGNSS_OK != peripherals_twi_tx(dev_addr, tx_data, data_size + 1, false))
+            {
+                return UBXGNSS_I2C_COMM_FAILURE;
+            }
+
+            return UBXGNSS_OK;
             break;
         }
 
@@ -135,10 +140,12 @@ static UBXGNSS_State_t gnss_comm_handler(UBXGNSS_Comm_Event_t event, uint16_t de
                 return UBXGNSS_I2C_COMM_FAILURE;
             }
 
-            if (UBXGNSS_OK != peripherals_twi_rx(dev_addr, &data_buffer, data_size))
+            if (UBXGNSS_OK != peripherals_twi_rx(dev_addr, data, data_size))
             {
                 return UBXGNSS_I2C_COMM_FAILURE;
             }
+
+            return UBXGNSS_OK;
             break;
         }
 

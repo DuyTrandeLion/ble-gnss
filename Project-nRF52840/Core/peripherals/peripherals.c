@@ -17,6 +17,7 @@
 
 
 static const nrf_drv_twi_t m_gbc_twi      = NRF_DRV_TWI_INSTANCE(GBC_TWI_INSTANCE);
+static const nrf_drv_twi_t m_ecompass_twi = NRF_DRV_TWI_INSTANCE(ECOMPASS_TWI_INSTANCE);
 static const nrf_drv_timer_t m_gnss_timer = NRF_DRV_TIMER_INSTANCE(GNSS_TIMER_INSTANCE);
 static const nrf_drv_timer_t m_ubx_timer  = NRF_DRV_TIMER_INSTANCE(GNSS_UBX_TIMER_INSTANCE);
 static const nrf_drv_spi_t m_oled_spi     = NRF_DRV_SPI_INSTANCE(OLED_SPI_INSTANCE);
@@ -24,13 +25,13 @@ static const nrf_drv_spi_t m_oled_spi     = NRF_DRV_SPI_INSTANCE(OLED_SPI_INSTAN
 static comm_handle_fptr m_gnss_comm_handle;
 static comm_handle_fptr m_barometer_comm_handle;
 static comm_handle_fptr m_uart_data_ready_handle;
+static comm_handle_fptr m_ecompass_comm_handle;
 static comm_handle_fptr m_timer_gnss_handle;
 static comm_handle_fptr m_timer_ubx_handle;
 static comm_handle_fptr m_timer_barometer_read_sensor_handle;
 static comm_handle_fptr m_timer_battery_handler;
 static comm_handle_fptr m_timer_lns_handler;
-static comm_handle_fptr m_ecompass_read_handle;
-static comm_handle_fptr m_ecompass_write_handle;
+static comm_handle_fptr m_timer_ecompass_handler;
 
 APP_TIMER_DEF(m_battery_timer_id);                                                  /**< Battery timer. */
 APP_TIMER_DEF(m_loc_and_nav_timer_id);                                              /**< Location and navigation measurement timer. */
@@ -99,10 +100,20 @@ static void twi_init(void)
     gbc_twi_config.sda = GBC_I2C_SDA_PIN;
     gbc_twi_config.scl = GBC_I2C_SCL_PIN;
 
+    nrf_drv_twi_config_t ecompass_twi_config = NRF_DRV_TWI_DEFAULT_CONFIG;
+
+    ecompass_twi_config.sda = ECOMPASS_I2C_SDA_PIN;
+    ecompass_twi_config.scl = ECOMPASS_I2C_SCL_PIN;
+
     nrf_drv_twi_init(&m_gbc_twi, &gbc_twi_config, NULL, NULL);
     APP_ERROR_CHECK(err_code);
 
     nrf_drv_twi_enable(&m_gbc_twi);
+
+    nrf_drv_twi_init(&m_ecompass_twi, &ecompass_twi_config, NULL, NULL);
+    APP_ERROR_CHECK(err_code);
+
+    nrf_drv_twi_enable(&m_ecompass_twi);
 }
 
 
@@ -242,7 +253,7 @@ void peripherals_oled_write_data(uint8_t *data, uint16_t data_size)
 }
 
 
-void peripherals_oled_delay(uint32_t delay_time_ms)
+void peripherals_delay_ms(uint32_t delay_time_ms)
 {
     nrf_delay_ms(delay_time_ms);
 }
@@ -371,6 +382,11 @@ static void timer_ubx_event_handler(nrf_timer_event_t event_type, void* p_contex
             {
                 m_timer_barometer_read_sensor_handle();
             }
+
+            if (NULL != m_timer_ecompass_handler)
+            {
+                m_timer_ecompass_handler();
+            }
             break;
         }
 
@@ -398,15 +414,9 @@ void peripherals_assign_comm_handle(uint8_t comm_handle_type, comm_handle_fptr c
                 break;
             }
 
-            case ECOMPASS_READ:
+            case ECOMPASS_COMM:
             {
-                m_ecompass_read_handle = comm_handle; 
-                break;
-            }
-
-            case ECOMPASS_WRITE:
-            {
-                m_ecompass_write_handle = comm_handle; 
+                m_ecompass_comm_handle = comm_handle; 
                 break;
             }
 
@@ -440,6 +450,12 @@ void peripherals_assign_comm_handle(uint8_t comm_handle_type, comm_handle_fptr c
                 break;
             }
 
+            case TIMER_ECOMPASS:
+            {
+                m_timer_ecompass_handler = comm_handle;
+                break;
+            }
+
             case TIMER_LNS:
             {
                 m_timer_lns_handler = comm_handle;
@@ -468,5 +484,10 @@ void comm_handle_polling(void)
     if (NULL != m_barometer_comm_handle)
     {
         m_barometer_comm_handle();
+    }
+
+    if (NULL != m_ecompass_comm_handle)
+    {
+        m_ecompass_comm_handle();
     }
 }

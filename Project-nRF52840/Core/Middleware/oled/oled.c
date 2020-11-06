@@ -45,7 +45,7 @@ void spi_oled_comm_handle(uint8_t hdl_type, uint8_t *hdl_buffer, size_t hdl_buff
 
         case OLED_DELAY:
         {
-            peripherals_oled_delay(*hdl_buffer);
+            peripherals_delay_ms(*hdl_buffer);
             break;
         }
 

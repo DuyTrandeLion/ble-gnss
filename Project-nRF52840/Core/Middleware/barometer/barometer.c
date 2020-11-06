@@ -45,7 +45,7 @@ static ICPPress_State_t barometer_comm_handle(ICPPress_Event_t icp_event, uint16
 
 static uint8_t barometer_delay_handle(uint32_t delay_time_ms)
 {
-    peripherals_oled_delay(delay_time_ms);
+    peripherals_delay_ms(delay_time_ms);
 }
 
 
