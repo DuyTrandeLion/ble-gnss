@@ -12,16 +12,18 @@
 #include "BsxLibraryErrorConstants.h"
 
 
-static uint8_t sys_calib_status = 0;
 static uint16_t m_ecompass_twi_time;
 static uint32_t m_ecompass_calib_check_time;
+static uint32_t m_calibration_status;
 
 static struct bno055_t m_bno055;
 static struct bno055_euler_t m_euler;
 static struct bno055_euler_float_t m_euler_data;
+static initParam_t m_bsx_init_param;
 
 static void ecompass_comm_polling_handle(void);
 static void ecompass_timer_event_handler(void);
+static void read_calibration_status();
 
 
 static int8_t bno055_i2c_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t r_len)
@@ -68,6 +70,7 @@ static void ecompass_comm_polling_handle(void)
 {
     if (ECOMPASS_CALIB_CHECK_PERIOD <= m_ecompass_calib_check_time)
     {
+        read_calibration_status();
         m_ecompass_calib_check_time = 0;
     }
 
@@ -89,6 +92,22 @@ static void ecompass_timer_event_handler(void)
 }
 
 
+static void read_calibration_status()
+{
+    uint8_t accel_calib_status = 0;
+    uint8_t gyro_calib_status = 0;
+    uint8_t mag_calib_status = 0;
+    uint8_t sys_calib_status = 0;
+
+    APP_ERROR_CHECK(bno055_get_accel_calib_stat(&accel_calib_status));
+    APP_ERROR_CHECK(bno055_get_gyro_calib_stat(&gyro_calib_status));
+    APP_ERROR_CHECK(bno055_get_mag_calib_stat(&mag_calib_status));
+    APP_ERROR_CHECK(bno055_get_sys_calib_stat(&sys_calib_status));
+
+    m_calibration_status = (accel_calib_status << 24) | (gyro_calib_status << 16) | (mag_calib_status << 8) | sys_calib_status;
+}
+
+
 void ecompass_init(void)
 {
     m_bno055.bus_write = bno055_i2c_write;
@@ -101,10 +120,25 @@ void ecompass_init(void)
 
     APP_ERROR_CHECK(bno055_init(&m_bno055));
     APP_ERROR_CHECK(bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF));
+
+    read_calibration_status();
+
+    m_bsx_init_param.accelspec = NULL;
+    m_bsx_init_param.gyrospec = NULL;
+    m_bsx_init_param.magspec = NULL;
+    m_bsx_init_param.usecase = NULL;
+
+    APP_ERROR_CHECK(bsx_init(&m_bsx_init_param));
 }
 
 
-void ecompass_get_heading(float *heading)
+void ecompass_read_calibration_status(uint32_t *calibration_status)
+{
+    *calibration_status = m_calibration_status;
+}
+
+
+void ecompass_read_heading(float *heading)
 {
     *heading = m_euler_data.h;
 }

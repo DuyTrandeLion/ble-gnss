@@ -1,8 +1,11 @@
 #include "oled.h"
 
 #include "gnss.h"
+#include "ecompass.h"
 #include "barometer.h"
 
+
+static uint32_t m_ecompass_calib_status = 0;
 
 typedef struct
 {
@@ -64,6 +67,8 @@ void oled_init()
     oled_write_string("CatTrack", 32, OLEDRow[0].y_coord);
     oled_write_string("Snow Lion", 32, OLEDRow[1].y_coord);
     oled_update_screen();
+
+    ecompass_read_calibration_status(&m_ecompass_calib_status);
 }
 
 
@@ -92,8 +97,15 @@ void oled_navigation_screen(ble_lns_t *p_lns, uint8_t display_page)
         {
             sprintf(print_buffer, "Distance: %dm", p_lns->p_location_speed->total_distance);
             oled_write_string(print_buffer, 0, OLEDRow[0].y_coord);
-
-            sprintf(print_buffer, "Heading: %.2fd", (float)(p_lns->p_location_speed->heading) / 100.0);
+            
+            if (0 != m_ecompass_calib_status)
+            {
+                sprintf(print_buffer, "Hdng: %.2fd", (float)(p_lns->p_location_speed->heading) / 100.0);
+            }
+            else
+            {
+                sprintf(print_buffer, "Hdng(er): %.2fd", (float)(p_lns->p_location_speed->heading) / 100.0);
+            }
             oled_write_string(print_buffer, 0, OLEDRow[1].y_coord);
 
             sprintf(print_buffer, "Rollin time: %ds", p_lns->p_location_speed->rolling_time);

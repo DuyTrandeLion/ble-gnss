@@ -10,7 +10,8 @@ extern "C" {
 
 
 void ecompass_init(void);
-void ecompass_get_heading(float *heading);
+void ecompass_read_calibration_status(uint32_t *calibration_status);
+void ecompass_read_heading(float *heading);
 
 
 #ifdef __cplusplus

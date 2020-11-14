@@ -596,7 +596,7 @@ static void navigation_update(void)
     m_navigation.destination_reached = !m_navigation.destination_reached;
     m_navigation.bearing++;
   
-    ecompass_get_heading(&ecompass_heading);
+    ecompass_read_heading(&ecompass_heading);
     m_navigation.heading = ecompass_heading * 100;
 
     update_time(&m_navigation.eta);
@@ -639,7 +639,7 @@ static void loc_speed_update(void)
 //    m_location_speed.instant_speed = (UBXGNSS_GET_INSTANT_SPEED(GNSS_DEV, lwgps_speed_mph) * 10);
 
     /* Read from sensors */
-    ecompass_get_heading(&ecompass_heading);
+    ecompass_read_heading(&ecompass_heading);
 
     m_location_speed.heading = ecompass_heading * 100;
 
