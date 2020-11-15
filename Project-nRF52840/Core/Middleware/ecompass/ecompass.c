@@ -3,13 +3,7 @@
 #include <string.h>
 
 #include "peripherals.h"
-
 #include "bno055.h"
-#include "BsxFusionLibrary.h"
-#include "BsxLibraryDataTypes.h"
-#include "BsxLibraryConstants.h"
-#include "BsxLibraryCalibConstants.h"
-#include "BsxLibraryErrorConstants.h"
 
 
 static uint16_t m_ecompass_twi_time;
@@ -19,7 +13,6 @@ static uint32_t m_calibration_status;
 static struct bno055_t m_bno055;
 static struct bno055_euler_t m_euler;
 static struct bno055_euler_float_t m_euler_data;
-static initParam_t m_bsx_init_param;
 
 static void ecompass_comm_polling_handle(void);
 static void ecompass_timer_event_handler(void);
@@ -122,13 +115,6 @@ void ecompass_init(void)
     APP_ERROR_CHECK(bno055_set_operation_mode(BNO055_OPERATION_MODE_NDOF));
 
     read_calibration_status();
-
-    m_bsx_init_param.accelspec = NULL;
-    m_bsx_init_param.gyrospec = NULL;
-    m_bsx_init_param.magspec = NULL;
-    m_bsx_init_param.usecase = NULL;
-
-    APP_ERROR_CHECK(bsx_init(&m_bsx_init_param));
 }
 
 
