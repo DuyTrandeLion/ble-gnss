@@ -62,6 +62,8 @@
   <ProjectSessionItem path="Nordic-BLE;BLE-nRF52840;Application;Middleware;oled"/>
   <ProjectSessionItem path="Nordic-BLE;BLE-nRF52840;Application;Middleware;ublox-neo"/>
   <ProjectSessionItem path="Nordic-BLE;BLE-nRF52840;Application;peripherals"/>
+  <ProjectSessionItem path="Nordic-BLE;BLE-nRF52840;components/nRF_Libraries"/>
+  <ProjectSessionItem path="Nordic-BLE;BLE-nRF52840;components/nRF_Libraries;hardfault"/>
   <ProjectSessionItem path="Nordic-BLE;BLE-nRF52840;nRF_Drivers"/>
   <ProjectSessionItem path="Nordic-BLE;BLE-nRF52840;nRF_Drivers;modules/nrfx/drivers"/>
  </Project>
@@ -105,18 +107,22 @@
  </TraceWindow>
  <Watch1>
   <Watches active="1" update="Twice a Second">
-   <Watchpoint expression="gnss_twi_time" name="gnss_twi_time" radix="10" linenumber="0" filename="../ble-gnss"/>
-   <Watchpoint expression="m_altitude" name="m_altitude" radix="-1" linenumber="0" filename="../ble-gnss"/>
-   <Watchpoint expression="m_barometer_def" name="m_barometer_def" radix="-1" linenumber="0" filename="../ble-gnss"/>
-   <Watchpoint expression="m_euler" name="m_euler" radix="16" linenumber="0" filename="../ble-gnss"/>
-   <Watchpoint expression="m_euler_data" name="m_euler_data" radix="-1" linenumber="0" filename="../ble-gnss"/>
-   <Watchpoint expression="m_location_speed" name="m_location_speed" radix="10" linenumber="0" filename="../ble-gnss"/>
-   <Watchpoint expression="m_navigation" name="m_navigation" radix="10" linenumber="0" filename="../ble-gnss"/>
-   <Watchpoint expression="m_position_quality" name="m_position_quality" radix="10" linenumber="0" filename="../ble-gnss"/>
-   <Watchpoint expression="m_pressure" name="m_pressure" radix="-1" linenumber="0" filename="../ble-gnss"/>
-   <Watchpoint expression="m_temperature" name="m_temperature" radix="-1" linenumber="0" filename="../ble-gnss"/>
-   <Watchpoint expression="m_ecompass_calib_status" name="m_ecompass_calib_status" radix="-1" linenumber="0" filename="../ble-gnss"/>
-   <Watchpoint expression="m_bsx_init_param" name="m_bsx_init_param" radix="-1" linenumber="0" filename="../ble-gnss"/>
+   <Watchpoint expression="gnss_twi_time" name="gnss_twi_time" radix="10" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="m_altitude" name="m_altitude" radix="-1" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="m_barometer_def" name="m_barometer_def" radix="-1" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="m_euler" name="m_euler" radix="16" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="m_euler_data" name="m_euler_data" radix="-1" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="m_location_speed" name="m_location_speed" radix="10" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="m_navigation" name="m_navigation" radix="10" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="m_position_quality" name="m_position_quality" radix="10" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="m_pressure" name="m_pressure" radix="-1" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="m_temperature" name="m_temperature" radix="-1" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="m_ecompass_calib_status" name="m_ecompass_calib_status" radix="-1" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="m_bsx_init_param" name="m_bsx_init_param" radix="-1" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="m_screen_timeout" name="m_screen_timeout" radix="-1" linenumber="181" filename="Project-nRF52840/main.c"/>
+   <Watchpoint expression="m_display_screen_select" name="m_display_screen_select" radix="-1" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="m_ecompass_calib_check_time" name="m_ecompass_calib_check_time" radix="-1" linenumber="0" filename="C:/ble-gnss"/>
+   <Watchpoint expression="accel_calib_status" name="accel_calib_status" radix="-1" linenumber="0" filename="C:/ble-gnss"/>
   </Watches>
  </Watch1>
  <Watch2>
@@ -129,13 +135,15 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="12" y="1489" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/main.c" selected="0" top="1463" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="44" y="9" useTextEdit="1" openedFrom="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/main.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Middleware/ecompass/ecompass.c" selected="0" top="84" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="23" y="1525" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/main.c" selected="1" top="1520" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="123" useTextEdit="1" openedFrom="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/main.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Middleware/ecompass/ecompass.c" selected="0" top="107" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="12" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Middleware/ecompass/ecompass.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="6549" useTextEdit="1" openedFrom="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/Core/Middleware/ecompass/ecompass.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Drivers/BNO055_driver/bno055.c" selected="0" top="6529" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="30" y="1043" useTextEdit="1" openedFrom="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/Core/Middleware/ecompass/ecompass.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Drivers/BNO055_driver/bno055.h" selected="1" top="2283" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="219" useTextEdit="1" openedFrom="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/Core/Middleware/ecompass/ecompass.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/peripherals/peripherals.c" selected="0" top="195" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="68" useTextEdit="1" openedFrom="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/Core/Middleware/ecompass/ecompass.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/peripherals/peripherals.h" selected="0" top="50" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="6549" useTextEdit="1" openedFrom="C:/ble-gnss/Project-nRF52840/Core/Middleware/ecompass/ecompass.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Drivers/BNO055_driver/bno055.c" selected="0" top="6531" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="857" useTextEdit="1" openedFrom="C:/ble-gnss/Project-nRF52840/Core/Drivers/BNO055_driver/bno055_support.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Drivers/BNO055_driver/bno055.h" selected="0" top="839" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="209" useTextEdit="1" openedFrom="C:/ble-gnss/Project-nRF52840/main.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/peripherals/peripherals.c" selected="0" top="203" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="68" useTextEdit="1" openedFrom="C:/ble-gnss/Project-nRF52840/Core/Middleware/ecompass/ecompass.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/peripherals/peripherals.h" selected="0" top="59" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="85" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Middleware/oled/oled.c" selected="0" top="136" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="23" useTextEdit="1" openedFrom="C:/ble-gnss/Project-nRF52840/main.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Middleware/oled/oled.h" selected="0" top="6" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="BLE-nRF52840" fileDialogDefaultFilter="*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.hxx" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="D:/Nordic-Embedded/ble-rd/nRF5_SDK_17.0.0_9d13099/modules/nrfx/mdk/ses_startup_nrf52840.s&#xa;D:/Nordic-Embedded/ble-gnss/nRF5_SDK_17.0.0_9d13099/modules/nrfx/mdk/ses_startup_nrf52840.s" fileDialogInitialDirectory="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/Core/Middleware/ecompass" debugSearchPath="" autoConnectCapabilities="3199"/>
+ <ARMCrossStudioWindow activeProject="BLE-nRF52840" fileDialogDefaultFilter="*.asm;*.s;*.inc" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 5.34/source/thumb_crt0.s&#xa;&#xa;D:/Nordic-Embedded/ble-rd/nRF5_SDK_17.0.0_9d13099/modules/nrfx/mdk/ses_startup_nrf52840.s&#xa;D:/Nordic-Embedded/ble-gnss/nRF5_SDK_17.0.0_9d13099/modules/nrfx/mdk/ses_startup_nrf52840.s" fileDialogInitialDirectory="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/Core/Middleware/ecompass" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

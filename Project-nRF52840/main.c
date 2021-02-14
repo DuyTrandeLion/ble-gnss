@@ -170,11 +170,18 @@ static ble_lns_loc_speed_t   m_location_speed;                                  
 static ble_lns_pos_quality_t m_position_quality;                                    /**< Position measurement quality. */
 static ble_lns_navigation_t  m_navigation;                                          /**< Navigation data structure. */
 
+static uint8_t m_accel_calib_status;
+static uint8_t m_gyro_calib_status;
+static uint8_t m_mag_calib_status;
+static uint8_t m_system_calib_status;
 static uint8_t m_display_screen_select;
 static uint8_t m_travelling_status;
+static volatile uint16_t m_screen_timeout = 0xFFFF;
+
+static float m_ecompass_heading;
 
 /**@brief String literals for the iOS notification categories. used then printing to UART. */
-static char const * lit_catid[BLE_ANS_NB_OF_CATEGORY_ID] =
+static char const *lit_catid[BLE_ANS_NB_OF_CATEGORY_ID] =
 {
     "Simple alert",
     "Email",
@@ -527,30 +534,48 @@ static void handle_alert_notification(ble_ans_c_evt_t * p_evt)
 {
     ret_code_t err_code;
 
-    if (p_evt->uuid.uuid == BLE_UUID_UNREAD_ALERT_CHAR)
+    switch (p_evt->uuid.uuid)
     {
-        err_code = bsp_indication_set(BSP_INDICATE_ALERT_1);
-        NRF_LOG_INFO("New Unread Alert:");
-        NRF_LOG_INFO("  Category:                 %s",
-                     (uint32_t)lit_catid[p_evt->data.alert.alert_category]);
-        NRF_LOG_INFO("  Number of unread alerts:  %d",
-                     p_evt->data.alert.alert_category_count);
+        case BLE_UUID_UNREAD_ALERT_CHAR:
+        {
+            err_code = bsp_indication_set(BSP_INDICATE_ALERT_1);
+            NRF_LOG_INFO("New Unread Alert:");
+            NRF_LOG_INFO("  Category:                 %s",
+                         (uint32_t)lit_catid[p_evt->data.alert.alert_category]);
+            NRF_LOG_INFO("  Number of unread alerts:  %d",
+                         p_evt->data.alert.alert_category_count);
+
+            oled_set_unread_noti(lit_catid[p_evt->data.alert.alert_category],
+                                 p_evt->data.alert.alert_category_count);
+            break;
+        }
+
+        case BLE_UUID_NEW_ALERT_CHAR:
+        {
+            err_code = bsp_indication_set(BSP_INDICATE_ALERT_0);
+            NRF_LOG_INFO("New Alert:");
+            NRF_LOG_INFO("  Category:                 %s",
+                         (uint32_t)lit_catid[p_evt->data.alert.alert_category]);
+            NRF_LOG_INFO("  Number of new alerts:     %d",
+                         p_evt->data.alert.alert_category_count);
+            NRF_LOG_INFO("  Text String Information:  %s",
+                         (uint32_t)p_evt->data.alert.p_alert_msg_buf);
+
+            oled_set_new_noti(lit_catid[p_evt->data.alert.alert_category],
+                              p_evt->data.alert.p_alert_msg_buf,
+                              p_evt->data.alert.alert_category_count);
+            break;
+        }
+
+        default:
+        {
+            // Only Unread and New Alerts exists, thus do nothing.
+            break;
+        }
     }
-    else if (p_evt->uuid.uuid == BLE_UUID_NEW_ALERT_CHAR)
-    {
-        err_code = bsp_indication_set(BSP_INDICATE_ALERT_0);
-        NRF_LOG_INFO("New Alert:");
-        NRF_LOG_INFO("  Category:                 %s",
-                     (uint32_t)lit_catid[p_evt->data.alert.alert_category]);
-        NRF_LOG_INFO("  Number of new alerts:     %d",
-                     p_evt->data.alert.alert_category_count);
-        NRF_LOG_INFO("  Text String Information:  %s",
-                     (uint32_t)p_evt->data.alert.p_alert_msg_buf);
-    }
-    else
-    {
-        // Only Unread and New Alerts exists, thus do nothing.
-    }
+
+    m_display_screen_select = NOTI_0;
+    m_screen_timeout = 0;
 }
 
 
@@ -589,15 +614,12 @@ static void update_time(ble_date_time_t * p_time)
 
 static void navigation_update(void)
 {
-    float ecompass_heading;
-
     m_navigation.position_status = (0 != UBXGNSS_GET_FIX(GNSS_DEV))? BLE_LNS_POSITION_OK : BLE_LNS_NO_POSITION;
     m_navigation.waypoint_reached    = !m_navigation.waypoint_reached;
     m_navigation.destination_reached = !m_navigation.destination_reached;
     m_navigation.bearing++;
   
-    ecompass_read_heading(&ecompass_heading);
-    m_navigation.heading = ecompass_heading * 100;
+    m_navigation.heading = m_ecompass_heading * 100;
 
     update_time(&m_navigation.eta);
 }
@@ -619,7 +641,6 @@ static void position_quality_update(void)
 static void loc_speed_update(void)
 {
     float elevation;
-    float ecompass_heading;
 
     m_location_speed.position_status = (0 != UBXGNSS_GET_FIX(GNSS_DEV))? BLE_LNS_POSITION_OK : BLE_LNS_NO_POSITION;
     m_location_speed.data_format = ((2 == UBXGNSS_GET_FIX_MODE(GNSS_DEV))? BLE_LNS_SPEED_DISTANCE_FORMAT_2D :
@@ -639,9 +660,9 @@ static void loc_speed_update(void)
 //    m_location_speed.instant_speed = (UBXGNSS_GET_INSTANT_SPEED(GNSS_DEV, lwgps_speed_mph) * 10);
 
     /* Read from sensors */
-    ecompass_read_heading(&ecompass_heading);
+    ecompass_read_heading(&m_ecompass_heading);
 
-    m_location_speed.heading = ecompass_heading * 100;
+    m_location_speed.heading = m_ecompass_heading * 100;
 
     if (TRAVEL_STARTED == m_travelling_status)
     {
@@ -649,6 +670,21 @@ static void loc_speed_update(void)
     }
 
     update_time(&m_location_speed.utc_time);
+}
+
+
+static void general_timer_handler(void)
+{
+    if (0xFFFF != m_screen_timeout)
+    {
+        m_screen_timeout++;
+    }
+
+    if ((m_screen_timeout >= SCREEN_TIMEOUT_PERIOD) && (0xFFFF != m_screen_timeout))
+    {
+        m_screen_timeout = 0xFFFF;
+        m_display_screen_select = NAVIGATION_0;
+    }
 }
 
 
@@ -678,7 +714,9 @@ static void lns_timeout_handler(void)
     {
         APP_ERROR_CHECK(err_code);
     }
-
+    
+    ecompass_read_calibration_status(&m_accel_calib_status, &m_gyro_calib_status, &m_mag_calib_status, m_system_calib_status);
+    oled_set_calib_status(m_accel_calib_status, m_gyro_calib_status, m_mag_calib_status, m_system_calib_status);
     oled_navigation_screen(&m_lns, m_display_screen_select);
 }
 
@@ -1189,7 +1227,7 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
 
         case BLE_GAP_EVT_AUTH_STATUS:
         {
-            NRF_LOG_INFO("BLE_GAP_EVT_AUTH_STATUS: status=0x%x bond=0x%x lv4: %d kdist_own:0x%x kdist_peer:0x%x",
+            NRF_LOG_INFO("BLE_GAP_EVT_AUTH_STATUS: status = 0x%x bond = 0x%x lv4: %d kdist_own: 0x%x kdist_peer: 0x%x",
                          p_ble_evt->evt.gap_evt.params.auth_status.auth_status,
                          p_ble_evt->evt.gap_evt.params.auth_status.bonded,
                          p_ble_evt->evt.gap_evt.params.auth_status.sm1_levels.lv4,
@@ -1273,13 +1311,12 @@ static void bsp_event_handler(bsp_event_t event)
 
         case BSP_EVENT_KEY_0:
         {
-
             break;
         }
 
         case BSP_EVENT_KEY_1:
         {
-
+            m_display_screen_select = NOTI_0;
             break;
         }
 
@@ -1299,7 +1336,7 @@ static void bsp_event_handler(bsp_event_t event)
 
         case BSP_EVENT_KEY_3:
         {
-            m_display_screen_select = (m_display_screen_select + 1) % FINAL_NAV;
+            m_display_screen_select = (m_display_screen_select + 1) % ALL_SCREEN;
             break;
         }
 
@@ -1492,6 +1529,7 @@ int main(void)
 
     peripherals_assign_comm_handle(TIMER_BATTERY, battery_level_update);
     peripherals_assign_comm_handle(TIMER_LNS, lns_timeout_handler);
+    peripherals_assign_comm_handle(TIMER_GENERAL, general_timer_handler);
 
     // Start execution.
     NRF_LOG_INFO("Positioning example started.");

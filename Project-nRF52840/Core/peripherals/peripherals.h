@@ -66,7 +66,7 @@ extern "C" {
 #define GNSS_TWI_PROCESS_DATA_PERIOD      (100)  /* TWI_TIMER_STEP */
 #define BAROMETER_TWI_PROCESS_DATA_PERIOD (500)  /* TWI_TIMER_STEP */
 #define ECOMPASS_TWI_PROCESS_DATA_PERIOD  (200)
-#define ECOMPASS_CALIB_CHECK_PERIOD       (200000)
+#define ECOMPASS_CALIB_CHECK_PERIOD       (500)
 
 
 #define MAX_RECEIVED_SENTENCE_SIZE      (UBXGNSS_NMEA_MAX_LENGTH)
@@ -88,6 +88,7 @@ extern "C" {
 #define TIMER_ECOMPASS                  (TIMER_BAROMETER + 1)
 #define TIMER_BATTERY                   (TIMER_ECOMPASS + 1)
 #define TIMER_LNS                       (TIMER_BATTERY + 1)
+#define TIMER_GENERAL                   (TIMER_LNS + 1)
 
 typedef void (*comm_handle_fptr)(void);
 

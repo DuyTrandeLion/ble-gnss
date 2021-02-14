@@ -1320,7 +1320,6 @@
         <folder Name="BNO055_driver">
           <file file_name="Core/Drivers/BNO055_driver/bno055.c" />
           <file file_name="Core/Drivers/BNO055_driver/bno055.h" />
-          <file file_name="Core/Drivers/BNO055_driver/bno055_support.c" />
         </folder>
       </folder>
       <folder Name="Middleware">

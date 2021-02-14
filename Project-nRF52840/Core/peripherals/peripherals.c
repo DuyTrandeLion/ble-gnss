@@ -32,6 +32,7 @@ static comm_handle_fptr m_timer_barometer_read_sensor_handle;
 static comm_handle_fptr m_timer_battery_handler;
 static comm_handle_fptr m_timer_lns_handler;
 static comm_handle_fptr m_timer_ecompass_handler;
+static comm_handle_fptr m_timer_general_handler;
 
 APP_TIMER_DEF(m_battery_timer_id);                                                  /**< Battery timer. */
 APP_TIMER_DEF(m_loc_and_nav_timer_id);                                              /**< Location and navigation measurement timer. */
@@ -354,6 +355,11 @@ static void timer_gnss_event_handler(nrf_timer_event_t event_type, void* p_conte
             {
                 m_timer_gnss_handle();
             }
+
+            if (NULL != m_timer_general_handler)
+            {
+                m_timer_general_handler();
+            }
             break;
         }
 
@@ -459,6 +465,12 @@ void peripherals_assign_comm_handle(uint8_t comm_handle_type, comm_handle_fptr c
             case TIMER_LNS:
             {
                 m_timer_lns_handler = comm_handle;
+                break;
+            }
+
+            case TIMER_GENERAL:
+            {
+                m_timer_general_handler = comm_handle;
                 break;
             }
 

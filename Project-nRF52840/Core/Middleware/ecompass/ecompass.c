@@ -6,9 +6,12 @@
 #include "bno055.h"
 
 
+static uint8_t accel_calib_status = 0;
+static uint8_t gyro_calib_status = 0;
+static uint8_t mag_calib_status = 0;
+static uint8_t sys_calib_status = 0;
 static uint16_t m_ecompass_twi_time;
 static uint32_t m_ecompass_calib_check_time;
-static uint32_t m_calibration_status;
 
 static struct bno055_t m_bno055;
 static struct bno055_euler_t m_euler;
@@ -82,22 +85,20 @@ static void ecompass_timer_event_handler(void)
     {
         m_ecompass_twi_time++;
     }
+
+    if (0xFFFF != m_ecompass_calib_check_time)
+    {
+        m_ecompass_calib_check_time++;
+    }
 }
 
 
 static void read_calibration_status()
 {
-    uint8_t accel_calib_status = 0;
-    uint8_t gyro_calib_status = 0;
-    uint8_t mag_calib_status = 0;
-    uint8_t sys_calib_status = 0;
-
     APP_ERROR_CHECK(bno055_get_accel_calib_stat(&accel_calib_status));
     APP_ERROR_CHECK(bno055_get_gyro_calib_stat(&gyro_calib_status));
     APP_ERROR_CHECK(bno055_get_mag_calib_stat(&mag_calib_status));
     APP_ERROR_CHECK(bno055_get_sys_calib_stat(&sys_calib_status));
-
-    m_calibration_status = (accel_calib_status << 24) | (gyro_calib_status << 16) | (mag_calib_status << 8) | sys_calib_status;
 }
 
 
@@ -118,9 +119,12 @@ void ecompass_init(void)
 }
 
 
-void ecompass_read_calibration_status(uint32_t *calibration_status)
+void ecompass_read_calibration_status(uint8_t *accel, uint8_t *gyro, uint8_t *mag, uint8_t *system)
 {
-    *calibration_status = m_calibration_status;
+    *accel = accel_calib_status;
+    *gyro = gyro_calib_status;
+    *mag = mag_calib_status;
+    *system = sys_calib_status;
 }
 
 

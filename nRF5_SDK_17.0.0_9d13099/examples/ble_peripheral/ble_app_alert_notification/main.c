@@ -790,7 +790,7 @@ static void bsp_event_handler(bsp_event_t event)
             }
             break;
 
-        case BSP_EVENT_KEY_0:
+        case BSP_EVENT_KEY_1:
             NRF_LOG_DEBUG("Button 1 pushed.");
             if (m_ans_c.conn_handle != BLE_CONN_HANDLE_INVALID)
             {
@@ -798,7 +798,7 @@ static void bsp_event_handler(bsp_event_t event)
             }
             break;
 
-        case BSP_EVENT_KEY_1:
+        case BSP_EVENT_KEY_2:
             NRF_LOG_DEBUG("Button 2 pushed.");
             if (m_ans_c.conn_handle != BLE_CONN_HANDLE_INVALID)
             {
@@ -806,7 +806,7 @@ static void bsp_event_handler(bsp_event_t event)
             }
             break;
 
-        case BSP_EVENT_KEY_2:
+        case BSP_EVENT_KEY_3:
             NRF_LOG_DEBUG("Button 3 pushed.");
             if (m_ans_c.conn_handle != BLE_CONN_HANDLE_INVALID)
             {
