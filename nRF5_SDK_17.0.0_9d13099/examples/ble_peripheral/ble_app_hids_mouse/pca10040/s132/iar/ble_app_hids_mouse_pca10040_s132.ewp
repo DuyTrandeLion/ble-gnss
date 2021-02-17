@@ -178,7 +178,6 @@
           <name>CCDefines</name>
           <state>APP_TIMER_V2</state>
           <state>APP_TIMER_V2_RTC1_ENABLED</state>
-          <state>BLE_STACK_SUPPORT_REQD</state>
           <state>BOARD_PCA10040</state>
           <state>CONFIG_GPIO_AS_PINRESET</state>
           <state>FLOAT_ABI_HARD</state>
@@ -264,11 +263,11 @@
         </option>
         <option>
           <name>IExtraOptionsCheck</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IExtraOptions</name>
-          <state>--diag_suppress Pe111</state>
+          <state></state>
         </option>
         <option>
           <name>CCLangConformance</name>
@@ -607,7 +606,6 @@
       <name>ADefines</name>
           <state>APP_TIMER_V2</state>
           <state>APP_TIMER_V2_RTC1_ENABLED</state>
-          <state>BLE_STACK_SUPPORT_REQD</state>
           <state>BOARD_PCA10040</state>
           <state>CONFIG_GPIO_AS_PINRESET</state>
           <state>FLOAT_ABI_HARD</state>
