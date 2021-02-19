@@ -7838,7 +7838,7 @@
 // <e> NRF_CLI_RTT_ENABLED - nrf_cli_rtt - RTT command line interface transport
 //==========================================================
 #ifndef NRF_CLI_RTT_ENABLED
-#define NRF_CLI_RTT_ENABLED 1
+#define NRF_CLI_RTT_ENABLED 0
 #endif
 // <o> NRF_CLI_RTT_TERMINAL_ID - RTT terminal ID for CLI.
 #ifndef NRF_CLI_RTT_TERMINAL_ID
@@ -7867,7 +7867,7 @@
 
 
 #ifndef NRF_CLI_UART_ENABLED
-#define NRF_CLI_UART_ENABLED 1
+#define NRF_CLI_UART_ENABLED 0
 #endif
 
 

@@ -59,13 +59,9 @@
     <folder Name="components/nRF_BLE">
       <folder Name="ble_advertising">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/ble_advertising/ble_advertising.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="No" />
       </folder>
       <folder Name="ble_db_discovery">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/ble_db_discovery/ble_db_discovery.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="Yes" />
       </folder>
       <folder Name="ble_dtm">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/ble_dtm/ble_dtm.c" />
@@ -110,8 +106,6 @@
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/peer_manager/gatts_cache_manager.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/peer_manager/id_manager.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/peer_manager/nrf_ble_lesc.c">
-          <configuration Name="Debug" build_exclude_from_build="No" />
-          <configuration Name="Release" build_exclude_from_build="No" />
         </file>
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/peer_manager/peer_data_storage.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/peer_manager/peer_database.c" />
@@ -120,16 +114,12 @@
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/peer_manager/peer_manager_handler.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/peer_manager/pm_buffer.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/peer_manager/security_dispatcher.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="No" />
       </folder>
       <folder Name="nrf_ble_gq">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/nrf_ble_gq/nrf_ble_gq.c" />
       </folder>
     </folder>
     <folder Name="components/nRF_Libraries/nRF_Crypto">
-      <configuration Name="Debug" build_exclude_from_build="No" />
-      <configuration Name="Release" build_exclude_from_build="No" />
       <folder Name="crypto/backend/cc310">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/crypto/backend/cc310/cc310_backend_aes.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/crypto/backend/cc310/cc310_backend_aes_aead.c" />
@@ -196,8 +186,6 @@
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/crypto/backend/oberon/oberon_backend_eddsa.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/crypto/backend/oberon/oberon_backend_hash.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/crypto/backend/oberon/oberon_backend_hmac.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="No" />
       </folder>
       <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/crypto/nrf_crypto_aead.c" />
       <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/crypto/nrf_crypto_aes.c" />
@@ -237,13 +225,14 @@
         <file file_name="../nRF5_SDK_17.0.0_9d13099/integration/nrfx/legacy/nrf_drv_spi.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/integration/nrfx/legacy/nrf_drv_spis.c">
           <configuration Name="Debug" build_exclude_from_build="Yes" />
+          <configuration Name="Release" build_exclude_from_build="Yes" />
         </file>
         <file file_name="../nRF5_SDK_17.0.0_9d13099/integration/nrfx/legacy/nrf_drv_swi.c">
           <configuration Name="Debug" build_exclude_from_build="Yes" />
+          <configuration Name="Release" build_exclude_from_build="Yes" />
         </file>
         <file file_name="../nRF5_SDK_17.0.0_9d13099/integration/nrfx/legacy/nrf_drv_twi.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/integration/nrfx/legacy/nrf_drv_uart.c">
-          <configuration Name="Debug" build_exclude_from_build="No" />
         </file>
       </folder>
       <folder Name="modules/nrfx/drivers">
@@ -257,11 +246,15 @@
         </file>
         <file file_name="nrfx_lpcomp.c">
           <configuration Name="Debug" build_exclude_from_build="Yes" />
+          <configuration Name="Release" build_exclude_from_build="Yes" />
         </file>
         <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_pdm.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_power.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_ppi.c" />
-        <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_pwm.c" />
+        <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_pwm.c">
+          <configuration Name="Debug" build_exclude_from_build="Yes" />
+          <configuration Name="Release" build_exclude_from_build="Yes" />
+        </file>
         <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_qdec.c">
           <configuration Name="Debug" build_exclude_from_build="Yes" />
           <configuration Name="Release" build_exclude_from_build="Yes" />
@@ -278,6 +271,7 @@
         </file>
         <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_swi.c">
           <configuration Name="Debug" build_exclude_from_build="Yes" />
+          <configuration Name="Release" build_exclude_from_build="Yes" />
         </file>
         <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_systick.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_timer.c" />
@@ -288,10 +282,8 @@
           <configuration Name="Release" build_exclude_from_build="Yes" />
         </file>
         <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_uart.c">
-          <configuration Name="Debug" build_exclude_from_build="No" />
         </file>
         <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_uarte.c">
-          <configuration Name="Debug" build_exclude_from_build="No" />
         </file>
         <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_wdt.c" />
         <folder Name="prs">
@@ -306,6 +298,7 @@
         <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_nvmc.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_temp.c">
           <configuration Name="Debug" build_exclude_from_build="Yes" />
+          <configuration Name="Release" build_exclude_from_build="Yes" />
         </file>
         <file file_name="../nRF5_SDK_17.0.0_9d13099/modules/nrfx/drivers/src/nrfx_twi_twim.c" />
       </folder>
@@ -394,8 +387,6 @@
     <folder Name="external/mbedtls">
       <file file_name="../nRF5_SDK_17.0.0_9d13099/external/mbedtls/library/aes.c" />
       <file file_name="../nRF5_SDK_17.0.0_9d13099/external/mbedtls/library/ctr_drbg.c" />
-      <configuration Name="Debug" build_exclude_from_build="No" />
-      <configuration Name="Release" build_exclude_from_build="No" />
       <file file_name="../nRF5_SDK_17.0.0_9d13099/external/mbedtls/library/platform_util.c" />
     </folder>
     <folder Name="external/UTF8/UTF16_Converter">
@@ -633,13 +624,9 @@
       </folder>
       <folder Name="ble_ans_c">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/ble_services/ble_ans_c/ble_ans_c.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="Yes" />
       </folder>
       <folder Name="ble_bas">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/ble_services/ble_bas/ble_bas.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="No" />
       </folder>
       <folder Name="ble_bas_c">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/ble_services/ble_bas_c/ble_bas_c.c" />
@@ -671,8 +658,6 @@
       </folder>
       <folder Name="ble_dis">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/ble_services/ble_dis/ble_dis.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="No" />
       </folder>
       <folder Name="ble_dis_c">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/ble_services/ble_dis_c/ble_dis_c.c" />
@@ -788,8 +773,6 @@
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/ble_services/experimental_ble_lns/ble_ln_cp.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/ble_services/experimental_ble_lns/ble_ln_db.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/ble_services/experimental_ble_lns/ble_lns.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="Yes" />
       </folder>
       <folder Name="experimental_ble_ots">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/ble/ble_services/experimental_ble_ots/ble_ots.c" />
@@ -826,17 +809,13 @@
         <configuration Name="Debug" build_exclude_from_build="Yes" />
         <configuration Name="Release" build_exclude_from_build="Yes" />
       </folder>
-      <configuration Name="Debug" build_exclude_from_build="No" />
-      <configuration Name="Release" build_exclude_from_build="No" />
     </folder>
     <folder Name="external/nRF_CC310">
-      <configuration Name="Debug" build_exclude_from_build="No" />
-      <configuration Name="Release" build_exclude_from_build="No" />
       <file file_name="../nRF5_SDK_17.0.0_9d13099/external/nrf_cc310/lib/cortex-m4/hard-float/libnrf_cc310_0.9.13.a">
-        <configuration Name="Debug" build_exclude_from_build="No" />
       </file>
       <file file_name="../nRF5_SDK_17.0.0_9d13099/external/nrf_cc310/lib/cortex-m4/soft-float/libnrf_cc310_0.9.13.a">
         <configuration Name="Debug" build_exclude_from_build="Yes" />
+        <configuration Name="Release" build_exclude_from_build="Yes" />
       </file>
     </folder>
     <folder Name="components/nRF_Libraries">
@@ -929,8 +908,6 @@
       </folder>
       <folder Name="crc16">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/crc16/crc16.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="No" />
       </folder>
       <folder Name="crc32">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/crc32/crc32.c" />
@@ -988,8 +965,6 @@
       </folder>
       <folder Name="hardfault">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/hardfault/nrf52/handler/hardfault_handler_gcc.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="No" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/hardfault/hardfault_implementation.c" />
       </folder>
       <folder Name="hci">
@@ -1025,8 +1000,6 @@
       </folder>
       <folder Name="sortlist">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/sortlist/nrf_sortlist.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="No" />
       </folder>
       <folder Name="strerror">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/strerror/nrf_strerror.c" />
@@ -1108,8 +1081,6 @@
       <folder Name="util">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/util/app_error.c" />
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/util/app_error_handler_gcc.c">
-          <configuration Name="Debug" build_exclude_from_build="No" />
-          <configuration Name="Release" build_exclude_from_build="No" />
         </file>
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/util/app_error_handler_iar.c">
           <configuration Name="Debug" build_exclude_from_build="Yes" />
@@ -1129,8 +1100,6 @@
       </folder>
       <folder Name="queue">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/queue/nrf_queue.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="No" />
       </folder>
       <folder Name="ringbuf">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/ringbuf/nrf_ringbuf.c" />
@@ -1141,8 +1110,6 @@
           <configuration Name="Debug" build_exclude_from_build="Yes" />
           <configuration Name="Release" build_exclude_from_build="Yes" />
         </file>
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="No" />
       </folder>
       <folder Name="sdcard">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/sdcard/app_sdcard.c" />
@@ -1151,8 +1118,6 @@
       </folder>
       <folder Name="sensorsim">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/sensorsim/sensorsim.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="No" />
       </folder>
       <folder Name="simple_timer">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/simple_timer/app_simple_timer.c" />
@@ -1174,13 +1139,9 @@
       </folder>
       <folder Name="sha256">
         <file file_name="../nRF5_SDK_17.0.0_9d13099/components/libraries/sha256/sha256.c" />
-        <configuration Name="Debug" build_exclude_from_build="No" />
-        <configuration Name="Release" build_exclude_from_build="No" />
       </folder>
     </folder>
     <folder Name="external/nRF_Oberon">
-      <configuration Name="Debug" build_exclude_from_build="No" />
-      <configuration Name="Release" build_exclude_from_build="No" />
       <file file_name="../nRF5_SDK_17.0.0_9d13099/external/nrf_oberon/lib/cortex-m4/hard-float/liboberon_3.0.5.a" />
     </folder>
     <folder Name="components/nRF_NFC">
@@ -1267,8 +1228,6 @@
       <file file_name="../nRF5_SDK_17.0.0_9d13099/external/cifra_AES128-EAX/eax.c" />
       <file file_name="../nRF5_SDK_17.0.0_9d13099/external/cifra_AES128-EAX/gf128.c" />
       <file file_name="../nRF5_SDK_17.0.0_9d13099/external/cifra_AES128-EAX/modes.c" />
-      <configuration Name="Debug" build_exclude_from_build="No" />
-      <configuration Name="Release" build_exclude_from_build="No" />
     </folder>
     <folder Name="components/proprietary_rf">
       <folder Name="esb">
@@ -1333,7 +1292,6 @@
           <file file_name="Core/Middleware/oled/oled.h" />
         </folder>
         <folder Name="ublox-neo">
-          <configuration Name="Debug" build_exclude_from_build="No" />
           <file file_name="Core/Middleware/ublox-neo/gnss.c" />
           <file file_name="Core/Middleware/ublox-neo/gnss.h" />
           <file file_name="Core/Middleware/ublox-neo/gnss_type.h" />
