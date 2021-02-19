@@ -38,7 +38,10 @@ APP_TIMER_DEF(m_battery_timer_id);                                              
 APP_TIMER_DEF(m_loc_and_nav_timer_id);                                              /**< Location and navigation measurement timer. */
 
 
-static void gnss_uart_evt_handler(app_uart_evt_t * p_event);
+static void gnss_uart_event_handler(app_uart_evt_t * p_event);
+static void gbc_twi_event_handler(nrf_drv_twi_evt_t const * p_event, void * p_context);
+static void ecompass_twi_event_handler(nrf_drv_twi_evt_t const * p_event, void * p_context);
+static void oled_spi_event_handler(nrf_drv_spi_evt_t const * p_event, void * p_context);
 static void battery_level_meas_timeout_handler(void * p_context);
 static void loc_and_nav_timeout_handler(void * p_context);
 static void timer_gnss_event_handler(nrf_timer_event_t event_type, void* p_context);
@@ -85,7 +88,7 @@ static void uart_init(void)
     APP_UART_FIFO_INIT(&comm_params,
                          GNSS_UART_RX_BUFF_SIZE,
                          GNSS_UART_TX_BUFF_SIZE,
-                         gnss_uart_evt_handler,
+                         gnss_uart_event_handler,
                          APP_IRQ_PRIORITY_LOWEST,
                          err_code);
     APP_ERROR_CHECK(err_code);
@@ -106,14 +109,23 @@ static void twi_init(void)
     ecompass_twi_config.sda = ECOMPASS_I2C_SDA_PIN;
     ecompass_twi_config.scl = ECOMPASS_I2C_SCL_PIN;
 
-    nrf_drv_twi_init(&m_gbc_twi, &gbc_twi_config, NULL, NULL);
+#if TWI_USE_INTERRUPT
+    err_code = nrf_drv_twi_init(&m_gbc_twi, &gbc_twi_config, gbc_twi_event_handler, NULL);
     APP_ERROR_CHECK(err_code);
+#else
+    err_code = nrf_drv_twi_init(&m_gbc_twi, &gbc_twi_config, NULL, NULL);
+    APP_ERROR_CHECK(err_code);
+#endif
 
     nrf_drv_twi_enable(&m_gbc_twi);
 
-    nrf_drv_twi_init(&m_ecompass_twi, &ecompass_twi_config, NULL, NULL);
+#if TWI_USE_INTERRUPT
+    err_code = nrf_drv_twi_init(&m_ecompass_twi, &ecompass_twi_config, ecompass_twi_event_handler, NULL);
     APP_ERROR_CHECK(err_code);
-
+#else
+    err_code = nrf_drv_twi_init(&m_ecompass_twi, &ecompass_twi_config, NULL, NULL);
+    APP_ERROR_CHECK(err_code);
+#endif
     nrf_drv_twi_enable(&m_ecompass_twi);
 }
 
@@ -130,7 +142,7 @@ static void spi_init(void)
 #endif
 
 #if SPI_USE_INTERRUPT
-    err_code = nrf_drv_spi_init(&m_oled_spi, &spi_config, oled_spi_callback, NULL);
+    err_code = nrf_drv_spi_init(&m_oled_spi, &spi_config, oled_spi_event_handler, NULL);
     APP_ERROR_CHECK(err_code);
 #else
     err_code = nrf_drv_spi_init(&m_oled_spi, &oled_spi_config, NULL, NULL);
@@ -297,7 +309,7 @@ static void loc_and_nav_timeout_handler(void * p_context)
 /**
  * @brief Handler for serial events.
  */
-static void gnss_uart_evt_handler(app_uart_evt_t * p_event)
+static void gnss_uart_event_handler(app_uart_evt_t * p_event)
 {
     switch (p_event->evt_type)
     {
@@ -327,8 +339,7 @@ static void gnss_uart_evt_handler(app_uart_evt_t * p_event)
 }
 
 
-void gnss_i2c_evt_handler(nrf_drv_twi_evt_t const * p_event,
-                                           void * p_context)
+static void gbc_twi_event_handler(nrf_drv_twi_evt_t const * p_event, void * p_context)
 {
     switch (p_event->type)
     {
@@ -339,6 +350,27 @@ void gnss_i2c_evt_handler(nrf_drv_twi_evt_t const * p_event,
 
         default: break;
     }
+}
+
+
+static void ecompass_twi_event_handler(nrf_drv_twi_evt_t const * p_event, void * p_context)
+{
+    switch (p_event->type)
+    {
+        case NRF_DRV_TWI_EVT_DONE:
+        {
+            break;
+        }
+
+        default: break;
+    }
+}
+
+
+static void oled_spi_event_handler(nrf_drv_spi_evt_t const * p_event, void * p_context)
+{
+
+
 }
 
 
