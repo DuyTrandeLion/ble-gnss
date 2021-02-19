@@ -135,15 +135,16 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="23" y="1525" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/main.c" selected="1" top="1520" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="123" useTextEdit="1" openedFrom="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/main.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Middleware/ecompass/ecompass.c" selected="0" top="107" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="3" y="1457" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/main.c" selected="0" top="1445" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="78" y="111" useTextEdit="1" openedFrom="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/main.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Middleware/ecompass/ecompass.c" selected="0" top="73" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="12" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Middleware/ecompass/ecompass.h" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="6549" useTextEdit="1" openedFrom="C:/ble-gnss/Project-nRF52840/Core/Middleware/ecompass/ecompass.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Drivers/BNO055_driver/bno055.c" selected="0" top="6531" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="857" useTextEdit="1" openedFrom="C:/ble-gnss/Project-nRF52840/Core/Drivers/BNO055_driver/bno055_support.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Drivers/BNO055_driver/bno055.h" selected="0" top="839" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="209" useTextEdit="1" openedFrom="C:/ble-gnss/Project-nRF52840/main.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/peripherals/peripherals.c" selected="0" top="203" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="39" y="500" useTextEdit="1" openedFrom="C:/ble-gnss/Project-nRF52840/main.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/peripherals/peripherals.c" selected="1" top="9" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="68" useTextEdit="1" openedFrom="C:/ble-gnss/Project-nRF52840/Core/Middleware/ecompass/ecompass.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/peripherals/peripherals.h" selected="0" top="59" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="85" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Middleware/oled/oled.c" selected="0" top="136" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="23" useTextEdit="1" openedFrom="C:/ble-gnss/Project-nRF52840/main.c" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Middleware/oled/oled.h" selected="0" top="6" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="76" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="Project-nRF52840/Core/Middleware/barometer/barometer.c" selected="0" top="54" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="BLE-nRF52840" fileDialogDefaultFilter="*.asm;*.s;*.inc" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 5.34/source/thumb_crt0.s&#xa;&#xa;D:/Nordic-Embedded/ble-rd/nRF5_SDK_17.0.0_9d13099/modules/nrfx/mdk/ses_startup_nrf52840.s&#xa;D:/Nordic-Embedded/ble-gnss/nRF5_SDK_17.0.0_9d13099/modules/nrfx/mdk/ses_startup_nrf52840.s" fileDialogInitialDirectory="D:/Nordic-Embedded/ble-gnss/Project-nRF52840/Core/Middleware/ecompass" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>
