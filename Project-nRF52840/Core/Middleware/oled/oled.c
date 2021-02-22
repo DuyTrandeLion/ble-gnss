@@ -33,7 +33,7 @@ static const Row_t OLEDRow[] =
 
 
 #if defined(SSD1309_USE_SPI)
-void spi_oled_comm_handler(uint8_t hdl_type, uint8_t *hdl_buffer, size_t hdl_buffer_size)
+void spi_oled_comm_handle(uint8_t hdl_type, uint8_t *hdl_buffer, size_t hdl_buffer_size)
 {
     switch (hdl_type)
     {
@@ -69,7 +69,7 @@ void spi_oled_comm_handler(uint8_t hdl_type, uint8_t *hdl_buffer, size_t hdl_buf
 
 void oled_init()
 {
-    ssd1309_Init(spi_oled_comm_handler);
+    ssd1309_Init(spi_oled_comm_handle);
     ssd1309_Fill(Black);
 
     oled_clear_screen();

@@ -17,7 +17,7 @@ static struct bno055_t m_bno055;
 static struct bno055_euler_t m_euler;
 static struct bno055_euler_float_t m_euler_data;
 
-static void ecompass_comm_polling_handler(void);
+static void ecompass_comm_polling_handle(void);
 static void ecompass_timer_event_handler(void);
 static void read_calibration_status();
 
@@ -62,7 +62,7 @@ static void bno055_delay_ms(uint32_t delay_time)
 }
 
 
-static void ecompass_comm_polling_handler(void)
+static void ecompass_comm_polling_handle(void)
 {
     if (ECOMPASS_CALIB_CHECK_PERIOD <= m_ecompass_calib_check_time)
     {
@@ -109,7 +109,7 @@ void ecompass_init(void)
     m_bno055.delay_msec = bno055_delay_ms;
     m_bno055.dev_addr = BNO055_I2C_ADDR1;
 
-    peripherals_assign_comm_handle(ECOMPASS_COMM, ecompass_comm_polling_handler);
+    peripherals_assign_comm_handle(ECOMPASS_COMM, ecompass_comm_polling_handle);
     peripherals_assign_comm_handle(TIMER_ECOMPASS, ecompass_timer_event_handler);
 
     APP_ERROR_CHECK(bno055_init(&m_bno055));
