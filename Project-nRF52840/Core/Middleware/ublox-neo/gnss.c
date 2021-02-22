@@ -17,9 +17,9 @@ static uint32_t     gnss_idle_time;
 
 UBXGNSS_State_t gnss_ret;
 
-static void gnss_comm_polling_handle(void);
-static void gnss_app_uart_data_ready_handle(void);
-static void gnss_timer_event_handle(void);
+static void gnss_comm_polling_handler(void);
+static void gnss_app_uart_data_ready_handler(void);
+static void gnss_timer_event_handler(void);
 static void ubx_timer_event_handler(void);
 
 static UBXGNSS_State_t gnss_comm_handler(UBXGNSS_Comm_Event_t event, uint16_t dev_addr, uint16_t reg_addr, uint8_t *data, uint16_t data_size, void *p_context);
@@ -38,16 +38,16 @@ void gnss_init(void)
     GNSS_DEV.interface = (UBXGNSS_UART_INTERFACE | UBXGNSS_I2C_INTERFACE);
     GNSS_DEV.timeout   = 1000;
 
-    peripherals_assign_comm_handle(GNSS_COMM, gnss_comm_polling_handle);
-    peripherals_assign_comm_handle(UART_DATA_READY, gnss_app_uart_data_ready_handle);
-    peripherals_assign_comm_handle(TIMER_GNSS, gnss_timer_event_handle);
+    peripherals_assign_comm_handle(GNSS_COMM, gnss_comm_polling_handler);
+    peripherals_assign_comm_handle(UART_DATA_READY, gnss_app_uart_data_ready_handler);
+    peripherals_assign_comm_handle(TIMER_GNSS, gnss_timer_event_handler);
     peripherals_assign_comm_handle(TIMER_UBX, ubx_timer_event_handler);
 
     UBXGNSS_Init(&GNSS_DEV);
 }
 
 
-static void gnss_comm_polling_handle(void)
+static void gnss_comm_polling_handler(void)
 {
     if (GNSS_TWI_PROCESS_DATA_PERIOD <= gnss_twi_time)
     {
@@ -59,7 +59,7 @@ static void gnss_comm_polling_handle(void)
 }
 
 
-static void gnss_app_uart_data_ready_handle(void)
+static void gnss_app_uart_data_ready_handler(void)
 {
     UNUSED_VARIABLE(peripherals_app_uart_get(&gnss_uart_data[gnss_char_count]));
     gnss_raw_data[gnss_char_count] = gnss_uart_data[gnss_char_count];
@@ -70,7 +70,7 @@ static void gnss_app_uart_data_ready_handle(void)
 }
 
 
-static void gnss_timer_event_handle(void)
+static void gnss_timer_event_handler(void)
 {
     if (0xFFFF != gnss_uart_time)
     {
