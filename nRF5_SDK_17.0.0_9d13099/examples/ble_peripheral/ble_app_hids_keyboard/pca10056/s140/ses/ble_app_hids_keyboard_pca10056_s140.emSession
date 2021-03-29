@@ -56,7 +56,7 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1574" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="1556" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1574" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="84" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="ble_app_hids_keyboard_pca10056_s140" fileDialogDefaultFilter="*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.hxx" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3711"/>
+ <ARMCrossStudioWindow activeProject="ble_app_hids_keyboard_pca10056_s140" fileDialogDefaultFilter="*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.hxx" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

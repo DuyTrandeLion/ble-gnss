@@ -54,6 +54,7 @@
 #include <stddef.h>
 #include "nordic_common.h"
 #include "nrf.h"
+#include "nrf_sdm.h"
 #include "app_error.h"
 #include "ble.h"
 #include "ble_err.h"
@@ -148,8 +149,6 @@ NRF_BLE_GATT_DEF(m_gatt);                                                       
 NRF_BLE_QWR_DEF(m_qwr);                                                             /**< Context for the Queued Write module.*/
 BLE_ADVERTISING_DEF(m_advertising);                                                 /**< Advertising module instance. */
 BLE_DB_DISCOVERY_DEF(m_ble_db_discovery);                                           /**< DB discovery module instance. */
-
-
 NRF_BLE_GQ_DEF(m_ble_gatt_queue,                                                    /**< BLE GATT Queue instance. */
                NRF_SDH_BLE_PERIPHERAL_LINK_COUNT,
                NRF_BLE_GQ_QUEUE_SIZE);
@@ -1079,6 +1078,8 @@ static void sleep_mode_enter(void)
 
 /**@brief Function for handling advertising events.
  *
+ * @details This function will be called for advertising events which are passed to the application.
+ *
  * @param[in] ble_adv_evt  Advertising event.
  */
 static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
@@ -1400,7 +1401,7 @@ static void delete_bonds(void)
  */
 static void advertising_init(void)
 {
-    uint32_t               err_code;
+    ret_code_t             err_code;
     ble_advertising_init_t init;
 
     memset(&init, 0, sizeof(init));
